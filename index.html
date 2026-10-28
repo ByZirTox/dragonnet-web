@@ -749,6 +749,14 @@ body.w-on #menu,body.w-on #game,body.w-on .fx-layer{visibility:hidden}   /* Mond
 <link rel="apple-touch-icon" href="icone-512.png">
 <link rel="icon" type="image/png" href="icone-512.png">
 <script>window.DRAGONNET_WEB={version:"1.4.1"};</script>
+<script>(function(){var V=window.DRAGONNET_WEB.version,shown=false;
+function bar(nv){if(shown)return;shown=true;var b=document.createElement('div');
+b.style.cssText='position:fixed;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);z-index:2147483000;background:#1A0E24;color:#FFE08A;border:2px solid #FFC53D;border-radius:14px;padding:10px 14px;font:700 14px system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;gap:10px;align-items:center';
+var fr=/^fr/i.test(navigator.language||'fr');b.innerHTML='<span>'+(fr?'Nouvelle version du jeu !':'New game version!')+'</span>';
+var k=document.createElement('button');k.textContent=fr?'Recharger':'Reload';k.style.cssText='background:#FFC53D;color:#1A0E24;border:0;border-radius:10px;padding:6px 12px;font:800 14px system-ui,sans-serif';
+k.onclick=function(){location.replace(location.pathname+'?v='+encodeURIComponent(nv));};b.appendChild(k);document.body.appendChild(b);}
+function chk(){fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){if(j&&j.version&&j.version!==V)bar(j.version);}).catch(function(){});}
+setTimeout(chk,15000);setInterval(chk,300000);document.addEventListener('visibilitychange',function(){if(!document.hidden)chk();});})();</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2218100797445149" crossorigin="anonymous" data-ad-frequency-hint="120s"></script>
 <script>window.adsbygoogle=window.adsbygoogle||[];window.adBreak=window.adConfig=function(o){adsbygoogle.push(o);};adConfig({preloadAdBreaks:'on',sound:'on'});</script>
 </head>
