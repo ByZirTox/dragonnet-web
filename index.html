@@ -759,8 +759,17 @@ function chk(){fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(funct
 setTimeout(chk,15000);setInterval(chk,300000);document.addEventListener('visibilitychange',function(){if(!document.hidden)chk();});})();</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2218100797445149" crossorigin="anonymous" data-ad-frequency-hint="120s"></script>
 <script>window.adsbygoogle=window.adsbygoogle||[];window.adBreak=window.adConfig=function(o){adsbygoogle.push(o);};adConfig({preloadAdBreaks:'on',sound:'on'});</script>
+<style id="site-links-css">
+/* Liens d'information du site (guides, à propos, contact, confidentialité) : visibles sous le menu, jamais pendant une partie */
+.site-links{position:fixed;left:0;right:0;bottom:0;z-index:12;display:flex;justify-content:center;flex-wrap:nowrap;height:20px;padding:0 4px;font:600 12px/20px var(--font-ui,system-ui,sans-serif);pointer-events:none}
+.site-links a{pointer-events:auto;color:var(--moon-soft,rgba(246,235,196,.78));text-decoration:none;padding:0 9px;white-space:nowrap}
+.site-links a+a{border-left:1px solid rgba(246,235,196,.28)}
+.site-links a:hover{color:var(--coin,#FFC53D);text-decoration:underline}
+body:has(#hud:not(.hidden)) .site-links,body.w-on .site-links{display:none}
+</style>
 </head>
 <body>
+<nav class="site-links" aria-label="Informations sur le site"><a href="/guides/">Guides</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a><a href="/confidentialite/">Confidentialité</a></nav>
 <canvas id="game" aria-label="Zone de jeu"></canvas>
 <div class="fx-layer" id="fx-vig"></div><div class="fx-layer" id="fx-hurt"></div><div class="fx-layer" id="fx-flash"></div>
 
