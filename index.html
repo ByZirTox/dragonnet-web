@@ -1308,8 +1308,11 @@ const HAL = { from:new Date(2026, 9, 27).getTime(), to:new Date(2026, 10, 3).get
 const halOn = () => HAL.test || (Date.now() >= HAL.from && Date.now() < HAL.to);
 const HAL_ON = halOn();   // décor et monstres déguisés : préparés une fois au lancement
 const HAL_GIFT = 20;
-const HAL_SHOP = [ { k:'cos', id:'crocs', pc:60 }, { k:'cos', id:'oreilles_cs', pc:80 }, { k:'cos', id:'fantome', pc:100 },
-  { k:'cos', id:'citrouille', pc:120 }, { k:'cos', id:'cape_vampire', pc:150 }, { k:'skin', id:'citrouille', pc:300 } ];
+// Équilibrage des événements saisonniers (Halloween, puis Noël…) : monnaie d'événement gagnée en partie et prix de la boutique
+const EV_DROP = { normal:.015, elite:1, boss:4 };   // chance par monstre normal, nombre par élite, nombre par boss (fin de chapitre et mode infini)
+const HAL_PRICES = { crocs:120, oreilles_cs:160, fantome:200, citrouille:240, cape_vampire:300, skin_citrouille:600 };   // total 1 620
+const HAL_SHOP = [ { k:'cos', id:'crocs', pc:HAL_PRICES.crocs }, { k:'cos', id:'oreilles_cs', pc:HAL_PRICES.oreilles_cs }, { k:'cos', id:'fantome', pc:HAL_PRICES.fantome },
+  { k:'cos', id:'citrouille', pc:HAL_PRICES.citrouille }, { k:'cos', id:'cape_vampire', pc:HAL_PRICES.cape_vampire }, { k:'skin', id:'citrouille', pc:HAL_PRICES.skin_citrouille } ];
 ICONS.candy = (ART && ARTI.bonbon) ? artSvg('bonbon') : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 9.6L1.4 7v10l3.8-2.6z" fill="#B35CFF" stroke="#3A1450" stroke-width="1.2" stroke-linejoin="round"/><path d="M18.8 9.6L22.6 7v10l-3.8-2.6z" fill="#B35CFF" stroke="#3A1450" stroke-width="1.2" stroke-linejoin="round"/><ellipse cx="12" cy="12" rx="7.4" ry="5.6" fill="#FF8A1E" stroke="#5A2200" stroke-width="1.3"/><path d="M8.6 7.5q-1.5 4.5 0 9M12 6.5q-1.6 5.5 0 11M15.4 7.5q-1.5 4.5 0 9" stroke="#FFE0A0" stroke-width="1.4" fill="none"/><ellipse cx="9.4" cy="9.4" rx="1.8" ry=".9" fill="#fff" opacity=".6"/></svg>';
 ICONS.pumpkin = (ART && ARTI.icon_halloween) ? artSvg('icon_halloween') : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.6 6.4c.2-1.7 1.2-2.9 2.9-3.4l.5 1.4c-1.2.4-1.9 1.2-2.1 2.2z" fill="#4E8A2A" stroke="#1E3A10" stroke-width=".9"/><ellipse cx="7.7" cy="13.8" rx="5.3" ry="6.9" fill="#E8741A" stroke="#5A2200" stroke-width="1.2"/><ellipse cx="16.3" cy="13.8" rx="5.3" ry="6.9" fill="#E8741A" stroke="#5A2200" stroke-width="1.2"/><ellipse cx="12" cy="13.8" rx="5.6" ry="7.2" fill="#FF8A1E" stroke="#5A2200" stroke-width="1.2"/><path d="M7.4 11.8l2.3-2.5 1 2.9zM16.6 11.8l-2.3-2.5-1 2.9zM7.1 15.3q4.9 3.7 9.8 0l-1.4 2.3-1.7-1-1.8 1.4-1.8-1.4-1.7 1z" fill="#FFE14A" stroke="#5A2200" stroke-width=".7" stroke-linejoin="round"/></svg>';
 function halPumpkin(g, x, y, s, lit){
@@ -2983,10 +2986,10 @@ const COS = {
   fete:      { slot:'visage', name:'Masque de fête',      r:2 },
   lei:       { slot:'cou',    name:'Collier de fleurs',   r:0 },
   medaille:  { slot:'cou',    name:'Médaille d’or',       r:1 },
-  crocs:        { slot:'visage', name:'Crocs de vampire',          r:1, ev:'hal' },
-  oreilles_cs:  { slot:'tete',   name:'Oreilles de chauve-souris', r:1, ev:'hal' },
-  fantome:      { slot:'visage', name:'Masque de fantôme',         r:2, ev:'hal' },
-  citrouille:   { slot:'tete',   name:'Citrouille',                r:2, ev:'hal' },
+  crocs:        { slot:'visage', name:'Crocs de vampire',          r:2, ev:'hal' },
+  oreilles_cs:  { slot:'tete',   name:'Oreilles de chauve-souris', r:2, ev:'hal' },
+  fantome:      { slot:'visage', name:'Masque de fantôme',         r:3, ev:'hal' },
+  citrouille:   { slot:'tete',   name:'Citrouille',                r:3, ev:'hal' },
   cape_vampire: { slot:'cou',    name:'Cape de vampire',           r:3, ev:'hal' },
   echarpe_plaid:    { slot:'cou',  name:'Écharpe d’automne',  r:2, ev:'pass' },
   couronne_braises: { slot:'tete', name:'Couronne de braises', r:3, ev:'pass' },
@@ -4925,14 +4928,14 @@ function killEnemy(e){
   const lm = chLoot(G.ch);
   if (e.elite){
     for (let k=0;k<6;k++) drop('coin', e.x + rand(-22,22), e.y + rand(-22,22), Math.round(3*lm));
-    if (HAL_ON) for (let k=0;k<3;k++) drop('candy', e.x + rand(-18,18), e.y + rand(-18,18), 1);
+    if (HAL_ON) for (let k=0;k<EV_DROP.elite;k++) drop('candy', e.x + rand(-18,18), e.y + rand(-18,18), 1);
     for (let k=0;k<3;k++) drop('gem', e.x + rand(-16,16), e.y + rand(-16,16), 1);
     if (Math.random() < .5) drop('heart', e.x, e.y);
     drop('chest', e.x, e.y);
     addShake(8);
   } else {
     if (Math.random() < .07) drop('coin', e.x, e.y, Math.max(1, Math.round(rand(1,3)*lm)));
-    if (HAL_ON && Math.random() < .06) drop('candy', e.x + rand(-6, 6), e.y + rand(-6, 6), 1);
+    if (HAL_ON && Math.random() < EV_DROP.normal) drop('candy', e.x + rand(-6, 6), e.y + rand(-6, 6), 1);
     if (Math.random() < .004*(P.fx.gem || 1)) drop('gem', e.x, e.y, 1);
     if (Math.random() < .006*(P.fx.loot || 1) && countPick('heart') < 2) drop('heart', e.x, e.y);
     if (Math.random() < .0025*(P.fx.loot || 1) && countPick('magnet') < 1) drop('magnet', e.x, e.y);
@@ -4950,13 +4953,13 @@ function onBossKilled(e){
   if (G.endless){   // la nuit continue : récompenses du boss, puis la vague suivante
     G.boss = null; addShake(14); G.flash = .4; Sfx.play('win'); buzz([40, 60, 40]);
     for (let k=0;k<12;k++) drop('gem', e.x + rand(-40,40), e.y + rand(-40,40), 1);
-    if (HAL_ON) for (let k=0;k<10;k++) drop('candy', e.x + rand(-40,40), e.y + rand(-40,40), 1);
+    if (HAL_ON) for (let k=0;k<EV_DROP.boss;k++) drop('candy', e.x + rand(-40,40), e.y + rand(-40,40), 1);
     for (let k=0;k<20;k++) drop('coin', e.x + rand(-50,50), e.y + rand(-50,50), Math.round(4*chLoot(G.ch)));
     UI.bossBar(false); UI.banner(BOSSES[e.type].won); return; }
   G.victory = true; G.vicReal = 0; G.vicSwept = false; G.timeScale = .3; addShake(18); G.flash = .6;
   Sfx.play('win'); buzz([40,60,40]);
   for (let k=0;k<15;k++) drop('gem', e.x + rand(-40,40), e.y + rand(-40,40), 1);
-  if (HAL_ON) for (let k=0;k<10;k++) drop('candy', e.x + rand(-40,40), e.y + rand(-40,40), 1);
+  if (HAL_ON) for (let k=0;k<EV_DROP.boss;k++) drop('candy', e.x + rand(-40,40), e.y + rand(-40,40), 1);
   for (let k=0;k<20;k++) drop('coin', e.x + rand(-50,50), e.y + rand(-50,50), Math.round(4*chLoot(G.ch)));
   UI.bossBar(false); UI.banner(BOSSES[e.type].won);
 }
