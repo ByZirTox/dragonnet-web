@@ -98,3 +98,14 @@ tr:last-child td{border-bottom:0}
   main{padding-top:26px}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* ---------- Fiches des dragons ---------- */
+.fiches{display:grid;gap:12px;margin:1em 0}
+.fiche{display:flex;gap:14px;align-items:flex-start;background:var(--panel);border:2px solid var(--panel-edge);border-radius:18px;padding:12px 14px}
+.fiche img{flex:none;width:96px;height:96px;border-radius:14px;background:var(--panel-deep)}
+.fiche h3{margin:0 0 .2em;font-size:1.2rem;color:var(--coin)}
+.fiche h3 small{display:block;font-family:inherit;font-size:.85rem;color:var(--moon-soft);font-weight:600}
+.fiche p{margin:.3em 0 0;font-size:.97rem;line-height:1.5}
+.fi-meta{color:var(--moon-soft)}
+.ev-img{float:left;width:56px;height:56px;margin:0 10px 4px 0;border-radius:12px}
+@media (max-width:420px){.fiche img{width:72px;height:72px}}
