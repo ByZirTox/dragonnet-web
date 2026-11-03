@@ -772,7 +772,7 @@ body.w-on #menu,body.w-on #game,body.w-on .fx-layer{visibility:hidden}   /* Mond
 /* Petits écrans (16:9) : la pastille du trésor et le bouton Halloween (posés en bas du vide) ont besoin de ~84 px */
 @media (max-height:680px){ #menu .tagline{display:none} #menu .logo img{max-height:72px} }
 </style>
-
+<script src="intro-studio.js"></script>
 <meta name="description" content="Dragonnet : un jeu de survie mignon avec ton bébé dragon. Joue dans ton navigateur, sur iPhone, Android ou PC. Même partie que dans l’appli Android.">
 <meta property="og:title" content="Dragonnet">
 <meta property="og:description" content="Survis aux vagues de monstres avec ton bébé dragon. Gratuit, dans ton navigateur.">
@@ -785,7 +785,7 @@ body.w-on #menu,body.w-on #game,body.w-on .fx-layer{visibility:hidden}   /* Mond
 <meta name="apple-mobile-web-app-title" content="Dragonnet">
 <link rel="apple-touch-icon" href="icone-512.png">
 <link rel="icon" type="image/png" href="icone-512.png">
-<script>window.DRAGONNET_WEB={version:"1.5.0"};</script>
+<script>window.DRAGONNET_WEB={version:"1.5.2"};</script>
 <script>(function(){var V=window.DRAGONNET_WEB.version,shown=false;
 function bar(nv){if(shown)return;shown=true;var b=document.createElement('div');
 b.style.cssText='position:fixed;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);z-index:2147483000;background:#1A0E24;color:#FFE08A;border:2px solid #FFC53D;border-radius:14px;padding:10px 14px;font:700 14px system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;gap:10px;align-items:center';
@@ -974,7 +974,7 @@ body:has(#hud:not(.hidden)) .site-links,body.w-on .site-links{display:none}
    ===================================================================== */
 
 // ---------- RÉGLAGES MONÉTISATION ----------
-const VERSION = '1.5.0';   // version du jeu : à augmenter à chaque mise à jour (stats + mail du support)
+const VERSION = '1.5.2';   // version du jeu : à augmenter à chaque mise à jour (stats + mail du support)
 const CONFIG = {
   admob: {
     testing: false, // ⚠️ mettre false + tes vrais IDs avant publication
