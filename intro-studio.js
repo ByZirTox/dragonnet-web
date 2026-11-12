@@ -10,6 +10,8 @@
 //   - le son est un MP3 joué par Web Audio (intro-by-lux.mp3) : rien n'est affiché au système.
 (function () {
   if (window.__introStudio) return;
+  // 9/11 (rétention, QCM de Tedy) : pas d'intro au TOUT PREMIER lancement (ni intro déjà vue, ni partie sauvegardée) : le joueur arrive plus vite au jeu.
+  try { var vu = localStorage.getItem('bylux.intro.vu'); localStorage.setItem('bylux.intro.vu', '1'); if (!vu && !localStorage.getItem('dragonnet.save.v1')) return; } catch (e) {}
   window.__introStudio = true;
   var d = document, fini = false, t0 = Date.now(), ctx = null, src = null, DUREE = 5000;
 
@@ -19,11 +21,13 @@
   box.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:2147483647;background:#000;opacity:1;transition:opacity .25s;touch-action:manipulation';
   d.documentElement.appendChild(box);
 
+  // promesses audio rattrapées : un contexte fermé les fait échouer (« AudioContext is closed »)
+  function sansErreur(pr) { if (pr && pr.catch) pr.catch(function () {}); }
   function fin() {
     if (fini) return;
     fini = true;
     try { if (src) src.stop(); } catch (e) {}
-    try { if (ctx && ctx.close) ctx.close(); } catch (e) {}
+    try { if (ctx && ctx.close) sansErreur(ctx.close()); } catch (e) {}
     box.style.opacity = '0';
     box.style.pointerEvents = 'none';
     setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 300);
@@ -37,7 +41,7 @@
   function lanceSon() {
     if (fini || !tampon || !ctx || src) return;
     try {
-      if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
+      if (ctx.state === 'suspended' && ctx.resume) sansErreur(ctx.resume());
       src = ctx.createBufferSource();
       src.buffer = tampon;
       src.connect(ctx.destination);
@@ -49,12 +53,14 @@
     if (AC) {
       ctx = new AC();
       fetch('intro-by-lux.mp3').then(function (r) { return r.arrayBuffer(); }).then(function (ab) {
-        return new Promise(function (ok, ko) { ctx.decodeAudioData(ab, ok, ko); });
+        // la promesse renvoyée par decodeAudioData est rattrapée : si l'intro est passée avant la fin du décodage,
+        // le contexte est fermé et elle échouerait sans être rattrapée (erreur « AudioContext is closed »)
+        return new Promise(function (ok, ko) { var pr = ctx.decodeAudioData(ab, ok, ko); if (pr && pr.catch) pr.catch(function () {}); });
       }).then(function (b) { tampon = b; if (voulu) lanceSon(); }).catch(function () {});
     }
   } catch (e) { ctx = null; }
   // Toucher l'écran réveille un contexte audio resté suspendu (politique d'autolecture du WebView)
-  box.addEventListener('touchstart', function () { if (ctx && ctx.state === 'suspended' && ctx.resume) try { ctx.resume(); } catch (e) {} }, { passive: true });
+  box.addEventListener('touchstart', function () { if (ctx && ctx.state === 'suspended' && ctx.resume) try { sansErreur(ctx.resume()); } catch (e) {} }, { passive: true });
 
   // L'image est chargée hors de la page (une image animée hors de la page ne tourne pas), puis posée :
   // l'animation part de sa première image à ce moment-là, en même temps que le son.
