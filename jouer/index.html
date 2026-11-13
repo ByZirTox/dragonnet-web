@@ -240,6 +240,13 @@ canvas#game{position:fixed;inset:0;width:100%;height:100%;display:block;touch-ac
 #boss-ico{position:absolute;left:0;top:50%;width:42px;height:42px;transform:translateY(-50%);border-radius:50%;object-fit:cover;object-position:50% 18%;background:rgba(20,11,34,.85);box-shadow:0 0 0 2px #FFB14A,0 2px 6px rgba(0,0,0,.5)}
 .hint{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 110px);transform:translateX(-50%);font-weight:700;font-size:1.05rem;
   color:var(--moon);text-align:center;background:rgba(24,14,40,.7);padding:8px 16px;border-radius:14px;white-space:nowrap;transition:opacity .5s}
+/* 1.6.0 (audit design de l'entonnoir) : texte qui passe à la ligne (« Ramasse l’expérience… » faisait 368 px à 360 px en français, ru, el, nl) ;
+   1re partie : pendant que le jeu attend le 1er mouvement, le conseil est plus gros et pulse (l'écran avait l'air figé) ; 2e conseil en haut, hors du pouce */
+.hint{white-space:normal;width:max-content;max-width:calc(100vw - 32px)}
+.hint.wait{font-size:1.25rem;background:rgba(24,14,40,.88);box-shadow:0 0 0 2px rgba(255,212,94,.75),0 6px 20px rgba(0,0,0,.45);animation:hintWait 1.4s ease-in-out infinite}
+.hint.top{bottom:auto;top:calc(env(safe-area-inset-top,0px) + 124px)}
+@keyframes hintWait{50%{transform:translateX(-50%) scale(1.07)}}
+@media (prefers-reduced-motion:reduce){.hint.wait{animation:none}}
 
 /* ---------- Modales ---------- */
 .modal{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 14px calc(env(safe-area-inset-bottom,0px) + 14px);background:rgba(14,8,24,.74)}
@@ -787,7 +794,7 @@ html[data-script="cjk"] body{line-break:strict;word-break:normal}html[data-scrip
 .splash img{display:none;width:min(84vw,380px);height:auto;filter:drop-shadow(0 10px 18px rgba(0,0,0,.5))}
 .splash.img img{display:block;animation:spIn .7s cubic-bezier(.2,1.4,.4,1) both}
 .splash.img b{display:none}
-.splash p{margin:0;color:var(--moon-soft,#d9cfa8);font-weight:700;font-size:1rem;opacity:.9}
+.splash p{margin:0;color:#fff;font-weight:700;font-size:1rem;text-shadow:0 2px 6px #000;text-wrap:balance}   /* 1.6.0 (audit design) : lisible sur le fond peint */
 .splash .sp-bar{display:block;width:120px;height:6px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:6px}
 .splash .sp-bar::after{content:"";display:block;width:40%;height:100%;border-radius:6px;background:#FFB547;animation:spBar 1.1s ease-in-out infinite}
 @keyframes spIn{from{opacity:0;transform:scale(.86) translateY(10px)}to{opacity:1;transform:none}}
@@ -1659,6 +1666,98 @@ html .art .wallet .chip .plus{text-shadow:none}
 @media (max-height:600px){.fb-card .fb-txt{min-height:56px}.fb-card .fb-stars{margin:2px 0 6px}.fb-card .fb-chips{margin-bottom:6px}}
 html[data-rtl] .modal-card .sub,html[data-rtl] .nv-v{text-align:center}
 @media (max-width:430px){.set-row.stack:has(> .btn) > .btn{grid-row:3;grid-column:1 / -1;justify-self:start}}
+/* 1.6.0 : fiche profil (maquette validée par Tedy, store/maquettes/fiche-profil-1.6.0.png) */
+.pf-head{padding:14px 12px 12px}
+.pf-id{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center}
+.pf-av{position:relative;width:96px;height:96px;border-radius:50%;padding:5px;background:conic-gradient(#FFC93D calc(var(--p,0)*360deg),rgba(255,255,255,.12) 0);box-shadow:0 0 0 3px #3A2160,0 4px 12px rgba(0,0,0,.4)}
+.pf-pic{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 40%,#FFE08A,#E8A93A 70%)}
+.pf-pic img{width:100%;height:100%;object-fit:cover}
+.pf-pic .ico{width:60%;height:60%}
+.pf-lvb{position:absolute;right:-4px;bottom:-4px;min-width:34px;height:34px;padding:0 6px;border-radius:17px;display:grid;place-items:center;background:#3A2160;color:#fff;font-family:var(--font-display);font-size:1.05rem;box-shadow:0 0 0 3px #FFC93D}
+.pf-who{min-width:0}
+.pf-nick{margin:0 0 6px;font-family:var(--font-display);font-size:1.45rem;line-height:1.1;color:#fff;overflow-wrap:anywhere}
+.pf-line{display:flex;flex-wrap:wrap;align-items:center;gap:2px 5px;margin:4px 0 0;font-size:.8rem;line-height:1.25;color:var(--moon-soft,#d9cfa8)}
+.pf-line .ico,.pf-line img,.pf-line .voie-pic{width:24px;height:24px;flex:none}
+.pf-line b{color:#FFE6A0}
+.pf-dot{opacity:.6}
+.pf-edit{gap:6px;margin-top:10px;flex-wrap:wrap}.pf-edit input{min-width:0;flex:1 1 190px}.pf-edit .btn{flex:none;margin-inline-start:auto}
+.pf-voie{display:inline-flex;align-items:center;gap:5px;padding:0;color:#FFE6A0;font:inherit;text-decoration:underline}.pf-voie .ico{width:22px;height:22px}
+.pf-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.pf-btns .btn{white-space:normal;line-height:1.1;min-height:42px;font-size:clamp(.74rem,3.6vw,.95rem);padding-inline:8px}
+.pf-lvh{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pf-lvh h3{margin:0}.pf-lvh h3 b{color:#FFC93D}
+.pf-xp{font-size:.82rem;opacity:.8}
+.pf-lv .ev-bar{margin:8px 0}
+.pf-tree{position:relative;margin-top:10px}
+.pf-badge{display:inline-grid;place-items:center;min-width:24px;height:24px;margin-inline-start:8px;padding:0 6px;border-radius:12px;background:#FF5DA8;color:#fff;font-size:.9rem;vertical-align:middle}
+.pf-sec{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.pf-sec small{opacity:.7;font-size:.8rem}
+.pf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 10px}
+.pf-t{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:86px;padding:8px 4px;border-radius:14px;background:rgba(24,14,40,.72);box-shadow:inset 0 0 0 2px rgba(255,201,61,.18);text-align:center}
+.pf-t .ico{width:30px;height:30px}
+.pf-t b{font-family:var(--font-display);font-size:1.25rem;line-height:1.1;color:#fff;font-variant-numeric:tabular-nums}
+.pf-t small{font-size:.74rem;line-height:1.15;opacity:.85;overflow-wrap:anywhere}
+.pf-col{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center}
+.pf-col > .ico{width:54px;height:54px}
+.pf-col h3{margin:0 0 2px}.pf-col p{display:flex;align-items:center;gap:4px;margin:0}.pf-col p .ico{width:20px;height:20px}
+.pf-score{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:18px;background:linear-gradient(#FFD66E,#E39A2A);color:#4A2600;font-family:var(--font-display);font-size:1.1rem;white-space:nowrap}
+.pf-score .ico{width:20px;height:20px}
+.pf-myh{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.pf-myh h3{margin:0}
+.pf-mys{display:flex;gap:8px;margin-top:8px}
+.pf-m{width:44px;height:44px;border-radius:50%;overflow:hidden;flex:none;box-shadow:0 0 0 2px var(--mc,#FFC93D);background:#140C22}
+.pf-m img{width:100%;height:100%;object-fit:cover}
+.pf-m.off{box-shadow:none;background:rgba(0,0,0,.35)}
+.pf-rows{padding:8px 14px}
+.pf-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;font-size:.92rem}
+.pf-row + .pf-row{border-top:1px solid rgba(255,255,255,.08)}
+.pf-row b{font-family:var(--font-display);font-size:1.05rem;color:#fff;white-space:nowrap}
+.pf-code{letter-spacing:.12em;color:#FFC93D!important}
+.pf-foot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:4px 0 6px}
+.pf-foot .btn{min-height:42px;white-space:normal;line-height:1.1}
+.pf-back{margin:0 0 8px}
+@media (max-width:340px){.pf-av{width:78px;height:78px}.pf-nick{font-size:1.25rem}.pf-t b{font-size:1.1rem}.pf-t{min-height:78px}}
+html[data-rtl] .pf-lvb{right:auto;left:-4px}
+/* audit design 1.6.0 (Fable) : fiche profil au plus près de la maquette */
+.pf-line{flex-wrap:nowrap;align-items:flex-start}
+.pf-line > .ico{width:20px;height:20px;margin-top:1px}
+.pf-txt{min-width:0;flex:1}
+.pf-line small{font-size:.74rem;opacity:.85}
+.pf-id{align-items:start}
+.pf-av{background:conic-gradient(#FFC93D calc(var(--p,0)*360deg),#7A5A1E 0);box-shadow:0 0 0 2px #2A1746,0 0 0 4px #D9A441,0 4px 12px rgba(0,0,0,.4)}
+.pf-lvb{right:-6px;bottom:-6px;background:radial-gradient(circle at 50% 35%,#5B2C9A,#2A1450);box-shadow:0 0 0 2px #FFE08A,0 0 0 4px #B8791E}
+html[data-rtl] .pf-lvb{right:auto;left:-6px}
+.pf-btns .btn,.pf-foot .btn{word-break:keep-all;overflow-wrap:normal}
+@media (min-width:400px){.pf-btns .btn{white-space:nowrap}}
+.pf-btns.hidden{display:none}
+.pf-edit{flex-wrap:wrap}.pf-edit input{flex:1 1 100%}
+.pf-eb{display:flex;gap:6px;margin-inline-start:auto}
+.pf-lv .acc-next{gap:4px 12px}
+.pf-lv .acc-next > span:first-child{flex:0 0 100%}
+.pf-col h3{font-size:clamp(.9rem,4.4vw,1.1rem);overflow-wrap:normal;hyphens:auto}
+@media (max-width:360px){.pf-col{gap:8px}.pf-col > .ico{width:46px;height:46px}}
+.pf-foot{gap:6px}
+.pf-foot .btn{font-size:clamp(.68rem,3.3vw,.92rem);padding-inline:16px;min-width:0}
+html:is([lang=ja],[lang^=zh],[lang=ko]) .pf-foot .btn,html:is([lang=ja],[lang^=zh],[lang=ko]) .pf-btns .btn{white-space:nowrap;font-size:.8rem}
+.pf-mys{display:grid;grid-template-columns:repeat(5,minmax(0,44px));gap:8px}
+.pf-m{width:auto;height:auto;aspect-ratio:1;box-shadow:0 0 0 2px #FFC93D,0 0 0 4px var(--mc,#B8791E)}
+.pf-m.off{box-shadow:inset 0 0 0 2px rgba(255,255,255,.08)}
+.pf-myh b{font-weight:400;font-size:.9rem;opacity:.85}
+.pf-grid{grid-auto-rows:1fr}
+.pf-t{justify-content:flex-start;padding-top:10px;box-shadow:inset 0 0 0 2px rgba(201,150,80,.45)}
+html[data-rtl] :is(.pf-sec,.pf-myh,.pf-lvh){flex-direction:row-reverse}
+.av-it small{padding:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.av-card .row{flex-wrap:wrap}.av-card .grow{min-width:120px;flex:1}.av-card h3{overflow-wrap:normal}
+#sheet-wrap.pf-on .sheet-head .wallet{display:none}
+
+/* 1.6.0 (entonnoir des 2 premières minutes, oui de Tedy) — menu simplifié tant que le joueur a fait moins de 2 parties : le logo, le chapitre et
+   « Jouer » seulement (événement, coffre, trésor, onglets de mode, pactes, build et tchat reviennent dès la 2e partie ; rien n'est perdu, tout continue
+   de compter). Écran de fin de la 1re partie : la récompense seule, en grand. */
+body.debut #btn-event, body.debut #btn-ck, body.debut #btn-hoard, body.debut .mode-tabs, body.debut #btn-pact, body.debut #btn-build, body.debut #btn-chat{display:none!important}
+body.debut #btn-play{animation:spPlay 1.6s ease-in-out .3s infinite}
+body.debut #btn-play:active{animation:none}   /* le bouton s'enfonce toujours sous le doigt */
+@media (prefers-reduced-motion:reduce){body.debut #btn-play{animation:none}}
+#m-result #rs-loot.fr1{grid-template-columns:minmax(0,1fr);justify-items:center}
+#m-result #rs-loot.fr1 .loot-item{font-size:1.9rem;min-height:64px;padding:8px 22px}
 </style>
 <style id="pc-ecran">
 /* Correctif PC (1.2) : le menu peint (logo image, cadres épais) dépassait la hauteur des téléphones et poussait les
@@ -1732,7 +1831,7 @@ html.pccol .pc-side.on{display:flex}
 <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>if(window.top!==window.self){try{window.top.location.replace(window.location.href);}catch(e){document.documentElement.style.display='none';}}</script>
-<script>window.DRAGONNET_WEB={version:"1.5.9"};</script>
+<script>window.DRAGONNET_WEB={version:"1.6.0"};</script>
 <script>(function(){var V=window.DRAGONNET_WEB.version,shown=false;
 function bar(nv){if(shown)return;shown=true;var b=document.createElement('div');
 b.style.cssText='position:fixed;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);z-index:2147483000;background:#1A0E24;color:#FFE08A;border:2px solid #FFC53D;border-radius:14px;padding:10px 14px;font:700 14px system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;gap:10px;align-items:center';
@@ -1922,8 +2021,10 @@ body:has(#hud:not(.hidden)) .site-links,body.w-on .site-links{display:none}
 <script>/* 1.5.9 (plantages WebView, Android Vitals du 12/11) : les traductions ne sont plus dans la page. On charge AVANT le jeu le
    fichier de la langue du joueur : celle du dernier lancement (dragonnet.lang, écrite par 26-langues.js), sinon celle du téléphone
    (même règle que langOf / phoneLang de 02-sauvegarde.js). Si on s'est trompé, le jeu relit le bon fichier lui-même. */
+/* 1.6.0 (entonnoir) : lancement en cours. Encore là au lancement suivant = celui-ci s'est arrêté avant l'image-titre (Fu, 29-en-ligne.js). */
+try { if (localStorage.getItem('dragonnet.fu.w')) localStorage.setItem('dragonnet.fu.x', String((+localStorage.getItem('dragonnet.fu.x') || 0) + 1)); localStorage.setItem('dragonnet.fu.w', '1'); } catch(e){}
 (function(){ try {
-  var N = {"v":"8a0d7acabf","l":["ar","bg","bn","cs","da","el","fi","gu","he","hi","hr","hu","id","it","ja","kn","ko","ml","mr","ms","my","nb","ne","nl","pa","pl","ro","ru","sk","sv","sw","ta","te","th","tl","tr","uk","ur","vi","zh","zt"]}, L = null;
+  var N = {"v":"d6a79e486d","l":["ar","bg","bn","cs","da","el","fi","gu","he","hi","hr","hu","id","it","ja","kn","ko","ml","mr","ms","my","nb","ne","nl","pa","pl","ro","ru","sk","sv","sw","ta","te","th","tl","tr","uk","ur","vi","zh","zt"]}, L = null;
   try { L = localStorage.getItem('dragonnet.lang'); } catch(e){}
   if (!L){ var all = [].concat(navigator.languages || [], navigator.language || []), Z = ['zh','yue','cmn','nan','hak','wuu','gan','hsn','cdo','cjy','czh','cpx','mnp','lzh'];
     var OK = ['fr','en','es','pt','de'].concat(N.l);
@@ -1953,7 +2054,7 @@ if (window.CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.round
    ===================================================================== */
 
 // ---------- RÉGLAGES MONÉTISATION ----------
-const VERSION = '1.5.9';   // version du jeu : à augmenter à chaque mise à jour (stats + mail du support)
+const VERSION = '1.6.0';   // version du jeu : à augmenter à chaque mise à jour (stats + mail du support)
 const CONFIG = {
   admob: {
     testing: false, // ⚠️ mettre false + tes vrais IDs avant publication
@@ -2085,7 +2186,7 @@ function defaults(){
     firstBuy:{}, moon:{ until:0, last:'' }, dealDay:'', tryDay:'', welcomeShown:false,
     rdPend:{ gems:0, coins:0, pass:false }, rdOwned:[],   // [RUSH DRAGON]
     hoard:{ t:0 }, ultTuto:false,
-    inv:[], eq:{ couronne:0, collier:0, griffes:0, armure:0 }, gearN:0, gearGift:false, shards:0, boots:0, pups:0, loreSeen:0, aube:0, markOn:true, dream:'',   // 1.5.8 : éclats (recyclage → Éveil), dragonneaux sauvés par le portail, pages du carnet déjà lues (masque)
+    inv:[], eq:{ couronne:0, collier:0, griffes:0, armure:0 }, gearN:0, gearGift:false, shards:0, boots:0, pups:0, loreSeen:0, aube:0, aubeN:0, nameAt:0, markOn:true, dream:'',   // 1.5.8 : éclats (recyclage → Éveil), dragonneaux sauvés par le portail, pages du carnet déjà lues (masque)
     st:{ kills:0, maxLvl:0, maxEvo:0, ults:0, legends:0, merges:0, defis:0, hoards:0, nohit:0, boss_sorciere:0, boss_chasseur:0, boss_dragonnoir:0 }, ach:{}, achSeen:{}, defi:{ day:'', streak:0 },
     pet:{ faim:80, forme:80, joie:80, t:0, lvl:1, xp:0, petT:0, swingT:0, goalT:0, play:{}, grow:0, fedT:0, egg:false }, millT:0, whint:0, candy:0, halGift:'', flakes:0, winGift:'', pass:{ id:'', pts:0, prem:false, cf:[], cp:[] }, endless:{ wk:'', best:0, all:0, ms:[], lvl:1, top:1, rec:{} }, garden:[null, null, null], plots:3, cos:{ tete:'', visage:'', cou:'' }, cosOwn:[], fish:{ bait:10, day:'', vids:0, log:{}, bag:{} }, colGot:[],
     acc:{ xp:0, lv:1, tree:{}, mig:0, voie:'' }, wk:{ id:'', list:[], bonus:false }, gl:{ kills:0, runs:0, boss:0, mins:0, endl:0, myst:0 },   // 1.5.8 (calepin du 10/11 au soir) : niveau de compte, arbre, missions de la semaine, objectifs à vie
@@ -2093,7 +2194,8 @@ function defaults(){
     bud:-1, pact:[], troph:['', '', '', '', '', ''], ensPend:[], ensGot:[], pwx:{ colere:0, rempart:0, orage:0, pluie:0, ombres:0 },   // 1.5.8 (idées du 10/11) : dragonneau compagnon, pactes cochés, trophées des 6 socles du nid, récompenses « jouer ensemble » (en cours, déjà créditées)   // 1.5.8 : boss mystiques (chance du moment, victoires, marque de la nuit, déjà vus)
     ckeys:0, ckDay:{ d:'', n:0 }, tir:'', tirOwn:[], avatar:'',   // 1.5.9 : clés et coffre de collection, skins d'attaque, avatar de profil
     pgs:[],   // Correctif PC (1.5.7 : Play Jeux) : succès déjà envoyés à Google Play Jeux (évite de les renvoyer à chaque partie)
-    fastStart:false, gearTip:0,   // Correctif PC (audit design 1.5.8, lot B) : 1re partie lancée depuis l'image-titre ; bulle « équipement » (1 = à montrer, 2 = vue)
+    fastStart:false, gearTip:0, fu:0,   // 1.6.0 : étapes de l'entonnoir déjà envoyées (masque, Fu dans 29-en-ligne.js)
+      // Correctif PC (audit design 1.5.8, lot B) : 1re partie lancée depuis l'image-titre ; bulle « équipement » (1 = à montrer, 2 = vue)
     invSort:'r',   // Correctif PC (audit design 1.5.8, lot B) : tri de l'inventaire (r = rareté, s = emplacement, l = niveau)
     newsV:'',   // Correctif PC (1.5.8, nouveautés) : dernière version dont le pop-up « Nouveautés » a été montré ('' dans une vieille sauvegarde = joueur d'avant la 1.5.8)
   };
@@ -2187,6 +2289,8 @@ if (!S.langV){ const ph = phoneLang(), OLD = ['fr', 'en', 'es', 'pt', 'de', 'hi'
   const NEW156 = ['ne', 'my'];
   if (S.lang && S.lang !== ph && (S.langSeen ? NEW156.includes(ph) : !OLD.includes(ph))){ S.lang = null; try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch(e) {} } }
 // Correctif PC (1.5.6 relecture) : records de survie pris sur des chapitres de 4:00 ramenés à l'échelle 3:00 (une seule fois)
+// 1.6.0 (fiche profil) : duels de l'aube JOUÉS (S.aubeN), absents avant la 1.6.0 : au moins autant que les victoires connues
+if (!(Math.floor(+S.aubeN || 0) >= Math.floor(+S.aube || 0))) S.aubeN = Math.max(0, Math.floor(+S.aube || 0));
 if (!S.bestV){ S.bestV = 156; for (const k in (S.best || {})) S.best[k] = Math.round(S.best[k]*3/4); }
 LANG.cur = LANG_OK.includes(S.lang) ? S.lang : phoneLang();
 let saveTimer = 0;
@@ -2861,20 +2965,21 @@ const Age = {
   kid(){ return S.age === 'u13'; },
   minor(){ return S.age === 'u13' || S.age === 'u16'; },
   ready(){ if (S.age) return Promise.resolve(); if (!this.wait) this.wait = new Promise(r => { this.res = r; }); return this.wait; },
-  ask(){
+  ask(o){
     if (S.age || $('#m-age')) return;
+    const daily = !(o && o.noDaily);   // 1.6.0 : pas de bonus du jour juste après une question posée au retour d'une partie
     const y = new Date(nowMs()).getFullYear(), m = document.createElement('div');
     m.className = 'modal'; m.id = 'm-age'; m.style.zIndex = $('#splash') ? '101' : '60'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');   // Correctif PC (audit design 1.5.8, lot B) : posée sur l'image-titre, avant le menu ; Correctif PC (audit final 1.5.8) : role/aria-modal sortis du commentaire
-    m.innerHTML = `<div class="modal-card welcome"><h2>Ton année de naissance</h2><p class="sub">Pour adapter les publicités à ton âge.</p>
+    m.innerHTML = `<div class="modal-card welcome"><h2>Ton année de naissance</h2><p class="sub">Pour adapter le jeu à ton âge.</p>
       <select id="age-y" class="ev-name-in age-sel" aria-label="Ton année de naissance"><option value="">Choisis</option>${Array.from({ length:100 }, (_, i) => `<option value="${y - i}">${y - i}</option>`).join('')}</select>
       <button class="btn btn-coin wide" id="age-ok" disabled>Valider</button></div>`;
-    document.body.appendChild(m);
+    document.body.appendChild(m); Fu.ev('age');   // 1.6.0 : entonnoir
     const sel = $('#age-y', m), ok = $('#age-ok', m);
     sel.addEventListener('change', () => { ok.disabled = !sel.value; });
     ok.addEventListener('click', () => {
       const a = y - (+sel.value) - 1;   // anniversaire peut-être pas encore passé : on retient l'âge le plus bas
-      S.age = a < 13 ? 'u13' : a < 16 ? 'u16' : 'adult'; persist(true); m.remove(); Sfx.play('click');
-      if (this.res) this.res(); UI.dailyPop();
+      S.age = a < 13 ? 'u13' : a < 16 ? 'u16' : 'adult'; persist(true); m.remove(); Sfx.play('click'); Fu.ev('age_ok');
+      if (this.res) this.res(); if (daily) UI.dailyPop();
     });
   },
 };
@@ -2943,6 +3048,8 @@ const Mon = {
       // jamais la fausse pub de 5 s (elle donnait la vraie récompense)
       // 1.5.9 : AdMob pas encore lancé (différé) → lancé maintenant. 8 s au plus pour initialize ; une fois initialisé, on attend la fin
       // (formulaire de consentement RGPD compris : le joueur y répond, la réanimation reste en pause car Mon.busy) — audit 1.5.9
+      // 1.6.0 : âge pas encore répondu (1re partie, question posée au retour au menu) → demandé maintenant, avant toute vidéo
+      if (!S.age && (this.N || this.web)){ Age.ask({ noDaily:true }); await Age.ready(); }
       if (this.N && !this.adsOk && this.N.AdMob){ const p = this.adsGo(); await Promise.race([p, new Promise(r => setTimeout(r, 8000))]); if (this.initOk && !this.adsOk) await p; }
       const ok = (this.N && this.adsOk) ? await this.nativeRewarded() : this.web ? await webAd('reward') : this.mock ? await mockAd(true)
         : (toast('Aucune vidéo disponible, réessaie dans un instant'), false);
@@ -5362,7 +5469,7 @@ function treeHtml(){
   const ap = accPts();
   let h = `<p class="note" style="margin-top:0">Chaque niveau de compte donne 1 point. Les passifs agissent tout seuls en partie, en plus des talents.</p>
     <div class="card row acc-pts"><div class="grow"><h3>Points à placer</h3><p class="acc-n">${ap}</p></div>${accSpent() ? `<button class="btn btn-ghost sm" data-act="tree-reset">Réinitialiser l’arbre</button>` : ''}</div>`;
-  h += avHtml() + voieHtml();   // 1.5.9 : avatar de profil
+  h += voieHtml();   // 1.6.0 : l'avatar se change maintenant depuis la fiche profil (profHtml)
   ACC_BRANCH.forEach((bn, b) => {
     h += `<h3 class="sec">${bn} <span class="acc-bp">${accBranchPts(b)}</span></h3><div class="acc-tree">`;   /* audit design du 11/11 : passifs d'une branche reliés par un tronc (on lisait une simple liste) */
     for (const n of ACC_TREE.filter(o => o.b === b)) h += nodeHtml(n);
@@ -5413,11 +5520,62 @@ function mystHtml(){   // page du carnet : les 5 boss mystiques (silhouette tant
   h += `</div>${m.curse > 0 ? `<p class="acc-need">${ico('moon')}<span>Marque de la nuit : −15 % de vie, encore ${m.curse} parties</span></p>` : ''}</div>`;
   return h;
 }
+// ---------- 1.6.0 : fiche profil (maquette validée par Tedy : store/maquettes/fiche-profil-1.6.0.png sur maquettes/fiche-profil-1.6.0) ----------
+// On touche l'avatar de l'accueil (#btn-acc) : pseudo, voie et pouvoir, guilde, niveau de compte, « Arbre et voie » (l'ancien écran Profil :
+// arbre, voie, pouvoir, missions, boss mystiques), records depuis le début, collection, « avec les autres ». Rien n'est calculé de nouveau :
+// tout vient de la sauvegarde (S.runs, S.st, S.cleared, S.endless, S.aube…) ; un seul compteur ajouté : S.aubeN (duels de l'aube JOUÉS).
+const CH_TOT = 6 + CH_MONDES.length;   // 12 chapitres : 1-5 (CHAPTERS), 6 = « Les terres de feu », 7-12 (CH_MONDES) ; les terres de feu 2, 3… ne comptent pas
+const pfNum = v => Math.max(0, Math.floor(+v || 0));
+// audit 1.6.0 : le serveur n'accepte qu'un changement de pseudo par 24 h (dragonnet_players_social) et garde l'ancien SANS le dire : même règle ici
+const nameOk = () => !(Board.on && S.online.id) || !(S.nameAt > 0) || nowMs() - S.nameAt >= 864e5;
+function profHtml(){
+  const a = S.acc, need = accNeed(a.lv), ap = accPts(), r = accReward(a.lv + 1), k = avKey(), v = voieOf(), pid = pwId(), pw = POUVOIRS[pid];
+  const g = S.guild && typeof S.guild.name === 'string' && S.guild.name ? S.guild : null, gLv = g ? (pfNum(g.level) || gLevelOf(pfNum(g.xp))) : 0;   // sauvegarde abîmée : jamais « Niveau NaN »
+  const nCh = Array.from({ length:CH_TOT }, (_, i) => S.cleared && S.cleared[i + 1] ? 1 : 0).reduce((x, y) => x + y, 0);
+  const nSk = Object.keys(SKINS).length, nAch = ACH.filter(x => (x.v() || 0) >= x.n).length, won = S.myst && Array.isArray(S.myst.won) ? S.myst.won : [];
+  const nMy = MYST.filter((m, i) => (won[i] || 0) > 0).length, code = UI.fr && UI.fr.data && UI.fr.data.code;
+  const tile = (ic, val, lab) => `<div class="pf-t">${ico(ic)}<b>${val}</b><small>${lab}</small></div>`;
+  const row = (lab, val, cls) => `<div class="pf-row"><span>${lab}</span><b${cls ? ` class="${cls}"` : ''}>${val}</b></div>`;
+  let h = `<div class="card pf-head"><div class="pf-id"><div class="pf-av" style="--p:${clamp(a.xp/need, 0, 1).toFixed(3)}"><span class="pf-pic">${k ? `<img src="${ARTI[k]}" alt="">` : ico('dragon')}</span><b class="pf-lvb">${a.lv}</b></div>
+    <div class="pf-who"><h2 class="pf-nick notr">${esc(S.online.name || '')}</h2>
+      <p class="pf-line">${v ? `${ico(v.icon)}<span class="pf-txt"><b>${v.name}</b> <span class="pf-dot">·</span> <small><span>${pw.name}</span> <span class="pf-dot">·</span> <span>Rang ${Math.max(1, pwRank(pid))}</span></small></span>`
+        : a.lv >= VOIE_LV ? `<button class="link pf-voie" data-act="pf-tree">${ico('scale')}<span>Choisis ta voie</span></button>` : `${ico('lock')}<span>Choisis ta voie au niveau de compte 5</span>`}</p>
+      <p class="pf-line">${ico('guild')}<span class="pf-txt">${g ? `<b class="notr">${esc(g.name)}</b> <span class="pf-dot">·</span> <small>Niveau ${gLv}</small>` : `<span>Sans guilde</span>`}</span></p></div></div>
+    ${UI.pfName ? `<div class="row pf-edit"><input class="ev-name-in notr" id="pf-name-in" maxlength="16" value="${esc(S.online.name || '')}" autocomplete="off" aria-label="Changer le pseudo"><span class="pf-eb"><button class="btn btn-ghost sm" data-act="pf-name">Annuler</button><button class="btn btn-coin sm" data-act="pf-name-ok">OK</button></span></div>` : ''}
+    <div class="pf-btns${UI.pfName ? ' hidden' : ''}"><button class="btn btn-ghost sm" data-act="av-pick">Changer l’avatar</button><button class="btn btn-ghost sm" data-act="pf-name">Changer le pseudo</button></div></div>`;
+  if (UI.avPick) h += avHtml();
+  h += `<div class="card pf-lv"><div class="pf-lvh"><h3><span>Niveau de compte</span> <b>${a.lv}</b></h3><span class="pf-xp">${fmt(a.xp)} / ${fmt(need)}</span></div>
+    <div class="ev-bar"><i style="transform:scaleX(${clamp(a.xp/need, 0, 1).toFixed(3)})"></i></div>
+    <p class="note acc-next"><span>Au niveau suivant</span> <b>${ico('up')}1<small>Arbre</small></b> <b>${ico('coin')}${fmt(r.coins)}</b> <b>${ico('gem')}${r.gems}</b> <b>${ico('shard')}${r.shards}<small>Éclats</small></b></p>
+    <button class="btn btn-coin wide pf-tree" data-act="pf-tree"><span>Arbre et voie</span>${ap ? `<span class="pf-badge">${ap}</span>` : ''}</button></div>`;
+  h += `<div class="pf-sec"><h3 class="sec">Mes records</h3><small>depuis le début</small></div><div class="pf-grid">`
+    + tile('flag', `${nCh} / ${CH_TOT}`, 'Chapitres') + tile('moon', `${pfNum(S.endless && S.endless.top) || 1}`, 'Nuit sans fin')
+    + tile('ember', `${aubeN()} / ${Math.max(aubeN(), pfNum(S.aubeN))}`, 'Duels de l’aube')   /* gagnés / joués (S.aubeN, 1.6.0) */ + tile('star', fmt(pfNum(S.runs)), 'Parties')
+    + tile('fireball', fmt(pfNum(S.st && S.st.kills)), 'Ennemis vaincus') + tile('up', fmt(pfNum(S.st && S.st.maxLvl)), 'Niveau max en partie') + `</div>`;
+  h += `<h3 class="sec">Collection</h3><div class="card pf-col">${ico('chest')}<div class="grow"><h3>Score de collection</h3><p>${ico('dragon')}<b>${S.skins.length} / ${nSk}</b></p></div><span class="pf-score">${ico('star')}${fmt(colScore())}</span></div>
+    <div class="pf-grid">` + tile('dragon', `${S.skins.length} / ${nSk}`, 'Dragons') + tile('medal', `${nAch} / ${ACH.length}`, 'Succès') + tile('nest', `${pupN()} / ${PUPS.length}`, 'Dragonneaux') + `</div>
+    <div class="card pf-my"><div class="pf-myh"><h3>Boss mystiques</h3><b>${nMy} / ${MYST.length}</b></div><div class="pf-mys">${MYST.map((m, i) => (won[i] || 0) > 0 ? `<span class="pf-m" style="--mc:${m.col}">${mystPic(i)}</span>` : `<span class="pf-m off"></span>`).join('')}</div></div>`;
+  h += `<h3 class="sec">Avec les autres</h3><div class="card pf-rows">` + row('Points d’événement', fmt(pfNum(S.ev && S.ev.points)))
+    + row('Série du défi du jour', `${pfNum(S.defi && S.defi.streak)}`) + row('Mon code ami', code ? esc(code) : '—', 'notr pf-code') + `</div>`;
+  h += `<div class="pf-foot"><button class="btn btn-ghost sm" data-act="pf-go" data-id="succes">Succès</button><button class="btn btn-ghost sm" data-act="pf-go" data-id="carnet">Carnet</button><button class="btn btn-ghost sm" data-act="pf-go" data-id="talents">Talents</button></div>`;
+  if (!code && Board.on && S.online.id && !UI.pfFr){ UI.pfFr = 1; UI.loadFriends().then(() => { if (UI.sheet === 'profil' && UI.profView !== 'arbre') UI.renderSheet(); }).catch(() => {}); }   // code ami : lu une fois
+  return h;
+}
 function accAct(act, b){
   const id = b.dataset.id;
   if (act === 'ttab'){ UI.talTab = id; Sfx.play('click'); UI.renderSheet(); return; }
   if (act === 'tree'){ const n = ACC_TREE.find(o => o.id === id); if (!n || !accCan(n)) return;
     S.acc.tree[id] = accRank(id) + 1; persist(true); Sfx.play('level'); bump(b); UI.renderSheet(); UI.menu(); return; }
+  if (act === 'pf-tree'){ UI.profView = 'arbre'; Sfx.play('click'); UI.renderSheet(); const sb = $('#sheet-body') || $('.sheet-body'); if (sb) sb.scrollTop = 0; return; }   // 1.6.0
+  if (act === 'pf-fiche'){ UI.profView = ''; Sfx.play('click'); UI.renderSheet(); return; }
+  if (act === 'pf-go'){ Sfx.play('click'); if (['succes', 'carnet', 'talents'].includes(id)){ UI.afterSheet = () => UI.open('profil'); UI.open(id); } return; }
+  if (act === 'pf-name'){ UI.pfName = !UI.pfName; Sfx.play('click'); UI.renderSheet(); if (UI.pfName){ const inp = $('#pf-name-in'); if (inp){ inp.focus(); inp.select(); } } return; }
+  if (act === 'pf-name-ok'){ const inp = $('#pf-name-in'), v = cleanName(inp ? inp.value : '');
+    if (v.length < 2){ toast('Choisis un pseudo de 2 à 16 caractères'); return; }
+    if (v === S.online.name){ UI.pfName = false; UI.renderSheet(); return; }
+    if (!nameOk()){ toast('Un seul changement de pseudo par jour.'); return; }   // audit 1.6.0 : le serveur garde l'ancien pseudo sans le dire
+    if (Board.on && S.online.id) S.nameAt = nowMs();
+    S.online.name = v; persist(true); UI.pfName = false; Sfx.play('click'); UI.renderSheet(); Board.rename().catch(() => {}).then(() => UI.menu()); return; }
   if (act === 'voie-x'){ UI.voiePick = true; UI.voieArm = null; Sfx.play('click'); UI.renderSheet(); return; }
   if (act === 'voie'){ const v = VOIES.find(o => o.id === id); if (!v || S.acc.lv < VOIE_LV) return;
     if (S.acc.voie && S.acc.voie !== id){   // audit 11/11 : 25 000 pièces = 2e appui pour confirmer (un doigt qui ripe ne coûte rien)
@@ -7921,7 +8079,7 @@ const countPick = type => pickups.reduce((n, p) => n + (p.type === type ? 1 : 0)
 function killEnemy(e){
   if (e.dead) return;
   if (e.revive && !e.rev && !e.mys){ e.rev = true; e.hp = e.maxHp*.5; e.down = 1.2; e.flash = .2; splash(e.x, e.y, e.r*.6, ETYPES[e.type].color); return; }   // 1.5.9 : le squelette se relève une fois
-  e.dead = true; G.kills++;   // 1.5.8 : rester immobile est permis (plus d'anti-AFK, décision de JP)
+  e.dead = true; G.kills++; if (G.first && G.kills === 1) Fu.ev('kill1', { t:Math.round(G.time) });   // 1.6.0 : entonnoir   // 1.5.8 : rester immobile est permis (plus d'anti-AFK, décision de JP)
   if (e.boss) hitStop(.14); else if (e.elite) hitStop(.045);   // 1.5.8 (feeling) : micro-pause (boss, boss mystique, élite ; jamais un ennemi normal)
   if (!G.ult && !G.pwA && !e.boss) addRage(e.elite ? RAGE_ELITE : RAGE_KILL);
   G.kc = G.kcT > 0 ? G.kc + 1 : 1; G.kcT = 1.5;
@@ -8213,7 +8371,7 @@ function addRage(v){
 }
 function ultimate(){
   if (G.state !== 'play' || G.victory || (G.rage || 0) < 1 || G.ult || G.pwA) return;
-  S.st.ults++; G.rage = 0;
+  S.st.ults++; G.rage = 0; if (G.first) Fu.ev('ult1', { t:Math.round(G.time) });   // 1.6.0 : entonnoir (Colère utilisée en 1re partie)
   const pw = pwId(), pr = pwRank(pw); pwGain(pw);   // 1.5.8 : pouvoir de la voie (21-pouvoirs.js), rang qui monte à l'usage
   if (pw !== 'colere'){ pwStart(pw, pr); P.mouthT = 1.1; G.flash = .25; buzz([30,40,90]); UI.hud(); return; }
   G.ult = { t:0, R:0, max:Math.hypot(VW, VH)/2 + 90, hit:new Set(), r:pr };
@@ -8496,7 +8654,7 @@ function startRun(){
   for (const a of [enemies, shots, eshots, pickups, parts, texts, lashes, ripples, bolts, DYING]) a.length = 0;
   grid.clear();
   Object.assign(G, { speed:1, state:'play', ch:S.chapter, time:0, kills:0, runCoins:0, runGems:0, runCandy:0, timeScale:1, spawnAcc:0, boss:null, victory:false,
-    vicReal:0, vicSwept:false, endless:false, endBoss:0, passPts:0, endRec:false, freeRerolls:1, adRerolls:2, reviveAd:false, reviveGems:0, pendingLv:0, lvPick:false, lvKeep:false, buildRec:[], buildManual:0, doubled:false, watchedAd:false,
+    vicReal:0, vicSwept:false, endless:false, endBoss:0, passPts:0, endRec:false, freeRerolls:1, adRerolls:2, reviveAd:false, reviveGems:0, pendingLv:0, reviveFree:false, lvPick:false, lvKeep:false, buildRec:[], buildManual:0, doubled:false, watchedAd:false,
     xpCombo:0, comboT:0, kc:0, kcT:0, flash:0, hurtFlash:0, frame:0, evIdx:0, rage:0, ult:null, chestQ:0, growPending:0, hitStop:0 });
   G.events = [60, 90, 120, 150, 180, 210].map((t, i) => ({ t:t*STAGE_TIME/STAGE_REF, k:i & 1 ? 'elite' : 'swarm' })).concat([{t:STAGE_TIME-4,k:'warn'},{t:STAGE_TIME,k:'boss'}]);
   G.defi = UI.defiNext ? defiToday() : null; G.defiDay = dayKey(); UI.defiNext = false; UI.luBld = false;
@@ -8523,6 +8681,8 @@ function startRun(){
   Gfx.on();   // témoin graphique : « en partie »
   G.first = !S.runs && !G.defi && !G.endless && !G.aube; UI.quitRun = false;   // Correctif PC (1.5.6 stats) : 1re partie du joueur
   if (G.first){ Track.ev('first_run_start', { ch:G.ch, l:LANG.cur, q:qLvl, ms:Math.round(performance.now()), ez:G.easy }); FirstRun.mark(); }
+  if (G.first) G.rage = .55;   // 1.6.0 (entonnoir, oui de Tedy) : 1re partie, jauge déjà à moitié : la Colère arrive vers 0:20, avant que la plupart des nouveaux tombent
+  if (!G.first && S.runs === 1) Fu.ev('run2', { m:G.defi ? 'defi' : G.endless ? 'nuit' : G.aube ? 'aube' : 'ch' });   // 1.6.0 : entonnoir
   mystRoll();   // 1.5.8 : boss mystique de cette partie ? (et marque de la nuit, avant le calcul de la vie)
   pactStart();   // 1.5.8 (idées du 10/11) : pactes cochés (avant le calcul de la vie)
   Object.assign(P, { x:0, y:0, dx:0, dy:1, hop:0, moving:false, iframe:1, lvl:1, xp:0, xpNext:xpNeed(1), weapons:startWeapons(curSkin()), passives:{}, hp:9999 });
@@ -8629,7 +8789,8 @@ function endRun(victory){
   let unlocked = 0;
   if (victory) S.wins = (S.wins || 0) + 1;
   let aubeFirst = false;
-  if (aube && victory){ S.aube = aubeN() + 1; aubeFirst = S.aube === 1; Track.ev('aube', { n:S.aube, s:Math.round(G.time), lv:P.lvl }); }   // 1.5.8 : duel gagné (1re fois = pages + marque)
+  if (aube) S.aubeN = Math.max(Math.floor(+S.aubeN || 0), aubeN()) + 1;   // 1.6.0 : duel de l'aube joué (fiche profil)
+  if (aube && victory){ S.aube = aubeN() + 1; aubeFirst = S.aube === 1; Track.ev('aube', { n:S.aube, j:S.aubeN, s:Math.round(G.time), lv:P.lvl }); }   // 1.5.8 : duel gagné (1re fois = pages + marque)
   if (victory && !defi && !aube){ S.cleared[ch] = true; if (ch === S.unlocked){ S.unlocked++; unlocked = S.unlocked; S.chapter = S.unlocked; } }
   const st = S.st; st.kills += kEff; st.maxLvl = Math.max(st.maxLvl, P.lvl);
   st.maxEvo = Math.max(st.maxEvo, Object.values(P.weapons).filter(w => w.evo).length);
@@ -10247,6 +10408,39 @@ const T172 = [   // 1.5.9 : nouveautés (29-nouveautes.js, même texte que store
   ['Nouveau : « Donner mon avis » dans les Réglages. Ta note et tes idées nous aident à améliorer Dragonnet !', 'New: “Give feedback” in Settings. Your rating and ideas help us make Dragonnet better!', 'Novedad: «Dar mi opinión» en Ajustes. ¡Tu nota y tus ideas nos ayudan a mejorar Dragonnet!', 'Novidade: “Dar minha opinião” em Configurações. Sua nota e suas ideias nos ajudam a melhorar o Dragonnet!', 'Neu: „Meine Meinung abgeben“ in den Einstellungen. Deine Bewertung und deine Ideen helfen uns, Dragonnet zu verbessern!'],
 ];
 for (const r of T172) EN_PAIRS.push([r[0], r[1]]);
+const T173 = [   // 1.6.0 : fiche profil (13-compte.js, profHtml)
+  ['Changer l’avatar', 'Change avatar', 'Cambiar avatar', 'Mudar avatar', 'Avatar ändern'],
+  ['Changer le pseudo', 'Change name', 'Cambiar nombre', 'Mudar nome', 'Namen ändern'],
+  ['Arbre et voie', 'Tree & path', 'Árbol y camino', 'Árvore e caminho', 'Baum & Pfad'],
+  ['Mes records', 'My records', 'Mis récords', 'Meus recordes', 'Meine Rekorde'],
+  ['depuis le début', 'since the start', 'desde el inicio', 'desde o início', 'seit Beginn'],
+  ['Chapitres', 'Chapters', 'Capítulos', 'Capítulos', 'Kapitel'],
+  ['Nuit sans fin', 'Endless night', 'Noche sin fin', 'Noite sem fim', 'Endlose Nacht'],
+  ['Duels de l’aube', 'Dawn duels', 'Duelos del amanecer', 'Duelos do amanhecer', 'Morgengrauen-Duelle'],
+  ['Parties', 'Games', 'Partidas', 'Partidas', 'Runden'],
+  ['Niveau max en partie', 'Top level in a run', 'Nivel máx. en partida', 'Nível máx. na partida', 'Höchstes Level'],
+  ['Dragonneaux', 'Baby dragons', 'Dragoncitos', 'Filhotes', 'Drachenbabys'],
+  ['Avec les autres', 'With others', 'Con otros', 'Com outros', 'Mit anderen'],
+  ['Points d’événement', 'Event points', 'Puntos del evento', 'Pontos do evento', 'Event-Punkte'],
+  ['Série du défi du jour', 'Daily challenge streak', 'Racha del reto diario', 'Sequência do desafio diário', 'Serie Tagesaufgabe'],
+  ['Mon code ami', 'My friend code', 'Mi código de amigo', 'Meu código de amigo', 'Mein Freundescode'],
+  ['Carnet', 'Journal', 'Diario', 'Diário', 'Tagebuch'],
+];
+for (const r of T173) EN_PAIRS.push([r[0], r[1]]);
+const T174 = [   // 1.6.0 : nouveautés (29-nouveautes.js, même texte que store/nouveautes-1.6.0.md)
+  ['Ta fiche profil !', 'Your player profile!', '¡Tu ficha de jugador!', 'Sua ficha de jogador!', 'Dein Spielerprofil!'],
+  ['Touche ton avatar sur l’accueil pour ouvrir ta fiche : pseudo, voie, guilde et niveau de compte.', 'Tap your avatar on the home screen to open your profile: nickname, path, guild and account level.', 'Toca tu avatar en la pantalla de inicio para abrir tu ficha: apodo, camino, gremio y nivel de cuenta.', 'Toque no seu avatar na tela inicial para abrir a ficha: apelido, caminho, guilda e nível da conta.', 'Tippe auf der Startseite auf deinen Avatar, um dein Profil zu öffnen: Spitzname, Pfad, Gilde und Kontostufe.'],
+  ['Retrouve tous tes records depuis le début et où en est ta collection.', 'See all your records since the start and how your collection is going.', 'Mira todos tus récords desde el principio y cómo va tu colección.', 'Veja todos os seus recordes desde o começo e como está a sua coleção.', 'Sieh alle deine Rekorde seit dem Start und wie weit deine Sammlung ist.'],
+  ['Change ton avatar et ton pseudo directement depuis ta fiche.', 'Change your avatar and nickname right from your profile.', 'Cambia tu avatar y tu apodo directamente desde tu ficha.', 'Troque seu avatar e seu apelido direto na ficha.', 'Ändere deinen Avatar und deinen Spitznamen direkt im Profil.'],
+];
+for (const r of T174) EN_PAIRS.push([r[0], r[1]]);
+const T175 = [   // 1.6.0 (audit) : avatar « Mon dragon » (était resté en français), voie à choisir, pseudo une fois par jour
+  ['Mon dragon', 'My dragon', 'Mi dragón', 'Meu dragão', 'Mein Drache'],
+  ['Choisis ta voie', 'Choose your path', 'Elige tu camino', 'Escolha seu caminho', 'Wähle deinen Pfad'],
+  ['Un seul changement de pseudo par jour.', 'You can only change your nickname once a day.', 'Solo puedes cambiar tu apodo una vez al día.', 'Você só pode trocar seu apelido uma vez por dia.', 'Du kannst deinen Spitznamen nur einmal am Tag ändern.'],
+  ['Pour adapter le jeu à ton âge.', 'To fit the game to your age.', 'Para adaptar el juego a tu edad.', 'Para adaptar o jogo à sua idade.', 'Damit das Spiel zu deinem Alter passt.'],   // 1.6.0 (entonnoir, choix de Tedy) : sous-titre neutre de la question d'âge
+];
+for (const r of T175) EN_PAIRS.push([r[0], r[1]]);
 for (const r of T169) EN_PAIRS.push([r[0], r[1]]);
 for (const r of T168) EN_PAIRS.push([r[0], r[1]]);
 for (const r of T167) EN_PAIRS.push([r[0], r[1]]);
@@ -10510,6 +10704,9 @@ for (const r of T169) I18N_ROWS.push([r[0], r[2], r[3], r[4]]);   // Correctif P
 for (const r of T170) I18N_ROWS.push([r[0], r[2], r[3], r[4]]);   // Correctif PC (calepin de Tedy 1.5.8, point 1 : écran Profil)
 for (const r of T171) I18N_ROWS.push([r[0], r[2], r[3], r[4]]);   // 1.5.9 : « Donner mon avis »
 for (const r of T172) I18N_ROWS.push([r[0], r[2], r[3], r[4]]);   // 1.5.9 : nouveautés
+for (const r of T173) I18N_ROWS.push([r[0], r[2], r[3], r[4]]);   // 1.6.0 : fiche profil
+for (const r of T174) I18N_ROWS.push([r[0], r[2], r[3], r[4]]);   // 1.6.0 : nouveautés
+for (const r of T175) I18N_ROWS.push([r[0], r[2], r[3], r[4]]);   // 1.6.0 : audit
 for (const p of P144) I18N_PAT.push([p[0].source, p[2], p[3], p[4]]);
 ['es', 'pt', 'de'].forEach((L, k) => {
   const ex = new Map(EN_PAIRS); for (const r of I18N_ROWS) if (r[k + 1]) ex.set(r[0], r[k + 1]);
@@ -10517,7 +10714,7 @@ for (const p of P144) I18N_PAT.push([p[0].source, p[2], p[3], p[4]]);
   DICT[L] = { exact:ex, re:EN_PATTERNS.map(([re, to]) => [new RegExp('^(?:' + re.source + ')$'), ps.has(re.source) ? ps.get(re.source) : to]) };
 });
 // @@NL (généré par scripts/assembler.mjs)
-const NL_ALL = ["ar","bg","bn","cs","da","el","fi","gu","he","hi","hr","hu","id","it","ja","kn","ko","ml","mr","ms","my","nb","ne","nl","pa","pl","ro","ru","sk","sv","sw","ta","te","th","tl","tr","uk","ur","vi","zh","zt"], NL_V = '8a0d7acabf';
+const NL_ALL = ["ar","bg","bn","cs","da","el","fi","gu","he","hi","hr","hu","id","it","ja","kn","ko","ml","mr","ms","my","nb","ne","nl","pa","pl","ro","ru","sk","sv","sw","ta","te","th","tl","tr","uk","ur","vi","zh","zt"], NL_V = 'd6a79e486d';
 // 1.5.9 : textes des 41 langues du monde HORS de la page (langues/<code>.js, voir scripts/assembler.mjs), chargés avant le jeu par le
 // script de tête de page.html. Mauvaise langue devinée (ou fichier pas encore lu) : relu ici (appli et site). Introuvable : anglais.
 const NL = {}; let NL_KEYS = [], NL_PKEYS = [], NL_FKEYS = [];
@@ -11038,6 +11235,28 @@ const FirstRun = {
     if (!m) return; FirstRun.clear(); if (!S.runs) Track.ev('first_run_quit', { s:m.s | 0, lv:m.lv | 0, k:m.k | 0, q:'close' }); },
 };
 
+// 1.6.0 (entonnoir des 2 premières minutes, demande de Tedy) : les étapes qui MANQUAIENT entre le lancement et la 2e partie. Les étapes déjà
+// mesurées restent celles d'avant : boot (n:1 = nouvelle installation), loaded (f:1 = 1er lancement, intro), lang, tuto_1, first_run_start,
+// first_run_end / first_run_quit. Nouvel événement « fu » { e, ms = ms depuis l'ouverture de ce lancement, s = s depuis la 1re ouverture, b = lancement n° } :
+//   lost  = lancements précédents arrêtés AVANT l'image-titre prête (plantage, page trop lente, appli fermée), compté au lancement suivant ;
+//   age / age_ok = question d'âge affichée / répondue ; play = « Jouer » touché sur l'image-titre ; move = 1er vrai mouvement de la 1re partie ;
+//   kill1 = 1er ennemi vaincu ; menu1 = 1er retour au menu après la 1re partie ; run2 = 2e partie lancée ;
+//   revive1 = réanimation offerte de la 1re partie utilisée ; ult1 = Colère (ou pouvoir) utilisée pendant la 1re partie.
+// Chaque étape part UNE fois par installation (S.fu = masque), seulement tant que le joueur n'a pas lancé sa 2e partie. Lecture : vue
+// dragonnet_kpi_entonnoir (supabase/2026-11-12_entonnoir.sql). Le script de tête de page.html pose « dragonnet.fu.w » (lancement en cours) ;
+// loaded le retire : s'il est encore là au lancement suivant, ce lancement-là s'est arrêté avant l'image-titre.
+const FU_BITS = { lost:1, age:2, age_ok:4, play:8, move:16, kill1:32, menu1:64, run2:128, revive1:256, ult1:512 };   // revive1 = réanimation offerte utilisée, ult1 = Colère (ou pouvoir) utilisée en 1re partie
+const FU_APRES = ['menu1', 'age', 'age_ok', 'run2'];   // étapes encore attendues après la 1re partie finie (S.runs = 1)
+const Fu = {
+  ev(e, x){ const b = FU_BITS[e]; if (!b || (+S.fu & b) || S.runs > 1 || (S.runs === 1 && !FU_APRES.includes(e))) return;
+    S.fu = (+S.fu | 0) | b; persist();
+    const d = { e, ms:Math.round(performance.now()), s:S.born ? Math.max(0, Math.round((nowMs() - S.born)/1000)) : 0, b:S.boots | 0 };
+    if (x) Object.assign(d, x); Track.ev('fu', d); },
+  boot(){ let n = 0; try { n = +localStorage.getItem('dragonnet.fu.x') || 0; localStorage.removeItem('dragonnet.fu.x'); } catch(e){}
+    if (n > 0 && !S.runs) Fu.ev('lost', { n:Math.min(n, 99) }); },
+  title(){ try { localStorage.removeItem('dragonnet.fu.w'); } catch(e){} },   // image-titre prête (loaded)
+};
+
 // =====================================================================
 //  MISSIONS DU JOUR : 3 objectifs gratuits, renouvelés chaque jour
 // =====================================================================
@@ -11327,6 +11546,11 @@ async function fdEnd(){
 // art/nouv_<version>.webp, hors de la page (scripts/assembler.mjs) ; fichier absent → pop-up sans image.
 // Une version de plus = une entrée EN TÊTE de NOUV, sinon outils/test-nouveautes.mjs échoue.
 const NOUV = [
+  { v:'1.6.0', t:'Ta fiche profil !', items:[
+    'Touche ton avatar sur l’accueil pour ouvrir ta fiche : pseudo, voie, guilde et niveau de compte.',
+    'Retrouve tous tes records depuis le début et où en est ta collection.',
+    'Change ton avatar et ton pseudo directement depuis ta fiche.',
+  ] },   // pas d'illustration (Higgsfield : accord de JP) : pop-up sans image
   { v:'1.5.9', t:'Plus rapide et plus stable !', items:[
     'Le jeu démarre plus vite et prend moins de mémoire.',
     'Moins de plantages sur les petits téléphones : le jeu s’adapte tout seul à ton appareil.',
@@ -11395,7 +11619,7 @@ const UI = {
   init(){
     $('#btn-build').onclick = () => UI.open('build');
     $('#btn-pact').onclick = () => { Sfx.play('click'); pactOpenSheet(); };   // 1.5.8 : pactes
-    $('#btn-play').onclick = () => { Sfx.unlock(); Sfx.play('click'); if (UI.endlessSel && !endlessOk()){ toast('Termine le chapitre 3 pour débloquer la nuit sans fin'); return; } startRun(); };
+    $('#btn-play').onclick = () => { Sfx.unlock(); Sfx.play('click'); if (S.runs && !S.age){ Age.ask({ noDaily:true }); return; }   /* 1.6.0 : âge pas encore répondu (1re partie finie) → la question d'abord */ if (UI.endlessSel && !endlessOk()){ toast('Termine le chapitre 3 pour débloquer la nuit sans fin'); return; } startRun(); };
     // 1.5.8 (calepin de Tedy du 11/11) : deux onglets de mode au-dessus de « Jouer » (Histoire / nuit sans fin) et barre d'XP du compte en haut
     $('#mt-story').onclick = () => { if (!UI.endlessSel) return; UI.endlessSel = false; Sfx.play('click'); UI.menu(); };
     $('#mt-endless').onclick = () => { if (UI.endlessSel) return; if (!endlessOk()){ Sfx.play('click'); toast('Termine le chapitre 3 pour débloquer la nuit sans fin'); return; } endlessEnsure(); UI.endlessSel = true; Sfx.play('click'); UI.menu(); };
@@ -11427,6 +11651,7 @@ const UI = {
     $('#sheet-body').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'g-search'){ e.preventDefault(); UI.searchGuilds(); } });
     $('#sheet-body').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.target.id === 'chat-in' || e.target.id === 'fr-in')){ e.preventDefault(); const k = $(e.target.id === 'chat-in' ? '[data-act="chat-send"]' : '[data-act="fr-add"]'); if (k) k.click(); } });
     $('#sheet-body').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'ev-name-in'){ e.preventDefault(); const ok = $('[data-act="ev-name-ok"]'); if (ok) ok.click(); } });
+    $('#sheet-body').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'pf-name-in'){ e.preventDefault(); const ok = $('[data-act="pf-name-ok"]'); if (ok) ok.click(); } });   // 1.6.0 : fiche profil
     $('#lu-choices').addEventListener('click', e => {
       const b = e.target.closest('.choice'); if (!b || UI.luLock) return;
       const o = UI.luChoices[+b.dataset.i]; applyChoice(o); Build.note(o, true); Sfx.play('click'); G.pendingLv--;
@@ -11451,7 +11676,8 @@ const UI = {
     $('#rv-actions').addEventListener('click', async e => {
       const b = e.target.closest('[data-rv]'); if (!b) return;
       const k = b.dataset.rv;
-      if (k === 'ad'){ UI.rvPaused = true; const ok = await Mon.rewarded('revive'); UI.rvPaused = false; if (ok){ G.reviveAd = true; G.watchedAd = true; UI.closeRevive(); revive(); } }
+      if (k === 'free'){ if (G.reviveFree) return; G.reviveFree = true; Fu.ev('revive1', { t:Math.round(G.time) }); UI.closeRevive(); revive(); }   // 1.6.0 : réanimation offerte de la 1re partie
+      else if (k === 'ad'){ UI.rvPaused = true; const ok = await Mon.rewarded('revive'); UI.rvPaused = false; if (ok){ G.reviveAd = true; G.watchedAd = true; UI.closeRevive(); revive(); } }
       else if (k === 'gem'){
         const cost = CONFIG.reviveGemCost[G.reviveGems];
         if (Eco.pay('gems', cost)){ G.reviveGems++; UI.closeRevive(); revive(); }
@@ -11482,7 +11708,8 @@ const UI = {
           if (ev && !ev.run.d && S.ev.id === ev.run.e){ ev.run.d = true; const add = Math.max(0, Math.min(ev.pts, EV_RUN_MAX - ev.pts, EV_MAX - S.ev.points)); S.ev.points += add; localGuildXp(Math.floor(add/10)); ev.pts += add; }
           persist(true); Sfx.play('coin'); UI.renderResultLoot(); UI.renderResultActions();
         }
-      } else { $('#m-result').classList.add('hidden'); const busy = UI.toMenu(true, b.dataset.rs === 'again');
+      } else if (b.dataset.rs === 'again' && !S.age){ Age.ask({ noDaily:true }); Age.ready().then(() => { if (G.state === 'end' && b.isConnected) b.click(); }); }   // 1.6.0 (audit) : l'âge d'abord, puis la partie demandée
+      else { $('#m-result').classList.add('hidden'); const busy = UI.toMenu(true, b.dataset.rs === 'again');
         // Correctif PC (1.5.3 premium) : au retour au menu, les pièces gagnées volent jusqu'au porte-monnaie
         if (b.dataset.rs === 'ok' && UI.result && UI.result.coins > 0) setTimeout(() => { if (G.state === 'menu' && !UI.sheet) UI.fly('coin', $('#btn-play'), Math.min(12, 4 + Math.round(UI.result.coins/150))); }, 200);
         if (b.dataset.rs === 'lore' && !busy) setTimeout(() => { if (G.state === 'menu' && !UI.sheet) UI.open('carnet'); }, 250);   // 1.5.8 histoire
@@ -11510,6 +11737,7 @@ const UI = {
       if (UI.dropShut()){ e.preventDefault(); return; }   // audit 11/11 : menu dépliant ouvert
       if (WW.on){ e.preventDefault(); if (!$('#w-panel').classList.contains('hidden')){ if (FISH.on) fishEnd(false, 'Pêche annulée'); $('#w-panel').classList.add('hidden'); WW.panel = null; } else worldClose(); return; }
       if (!$('#ad').classList.contains('hidden') || !$('#pay').classList.contains('hidden')){ e.preventDefault(); return; }
+      if (UI.sheet === 'profil' && UI.profView === 'arbre'){ UI.profView = ''; UI.renderSheet(); e.preventDefault(); return; }   // audit 1.6.0 : retour = la fiche
       if (UI.sheet){ UI.close(); e.preventDefault(); return; }
       if (G.state === 'play'){ UI.openPause(); e.preventDefault(); return; }
       if (G.state === 'pause'){ $('#ps-resume').click(); e.preventDefault(); return; }
@@ -11700,6 +11928,7 @@ const UI = {
   },
   menu(){
     if (S.chapter > S.unlocked) S.chapter = S.unlocked;
+    document.body.classList.toggle('debut', S.runs < 2);   // 1.6.0 (entonnoir, oui de Tedy) : menu simplifié avant la 2e partie (style.css, body.debut)
     { const bb = $('#btn-build'), l = Build.list();   // Correctif PC (1.5.5 build) : accès direct au build, à côté de « Jouer »
       bb.classList.toggle('hidden', S.runs < 1); bb.classList.toggle('on', S.build.on);
       bb.innerHTML = `${ico(l.length ? Build.icon(l[0]) : 'star')}<span>${S.build.on ? 'Auto' : 'Build'}</span>`; }
@@ -11874,9 +12103,14 @@ const UI = {
     for (const a of [enemies, shots, eshots, pickups, parts, texts, lashes, ripples, bolts]) a.length = 0;
     $('#hud').classList.add('hidden'); $('#menu').classList.remove('hidden');
     UI.measureMenu(); UI.menu(); UI.wallet();
+    if (afterRun){ Fu.ev('menu1', { r:again ? 1 : 0 }); try { localStorage.removeItem('bylux.intro.attendre'); } catch(e){} }   // 1.6.0 : entonnoir (r:1 = « Rejouer », le menu n'est pas vu)
     Board.flush(); Board.flushEnd(); Cloud.push(); Track.flush();
     UI.trySkin = null;
     if (afterRun) Gfx.ok();   // 1.5.9 : une partie finie sans plantage → fin de l'Économie « de précaution » du 1er lancement
+    // 1.6.0 (entonnoir, choix de Tedy) : la question d'âge vient ici, au 1er retour au menu (plus avant la 1re partie), 1,2 s après (le menu et ses
+    // pièces se voient d'abord) ; « Jouer » touché avant la pose tout de suite (#btn-play), « Rejouer » aussi (gestionnaire de #m-result).
+    // Rien d'autre à ce retour : ni bonus du jour (noDaily, il vient au lancement suivant), ni bulle « équipement » (retour suivant).
+    if (afterRun && !S.age){ setTimeout(() => { if (G.state === 'menu') Age.ask({ noDaily:true }); }, 1200); return true; }   // audit design : 1,2 s pour voir le menu ; rien d'autre à ce retour (bulle « équipement » au suivant)
     if (afterRun && S.gearTip === 1) setTimeout(() => UI.gearTip(), 900);   // Correctif PC (audit design 1.5.8, lot B) : « Nouveau : l’équipement ! » au 1er retour au menu
     if (afterRun && S.runs >= 1 && !S.guideTip){ S.guideTip = true; persist(); setTimeout(() => toast('Astuce : le guide du jeu est dans les Réglages'), 1800); }
     if (afterRun && Mon.native && S.notif == null && S.runs >= 1){ setTimeout(() => Notif.offer(), 500); return true; }
@@ -11909,13 +12143,13 @@ const UI = {
     if (name === 'event'){ Ev.sync(); UI.evBoard = null; UI.evErr = false; UI.evEditing = false; UI.lb = {}; UI.lbErr = {}; }
     if (name === 'shop'){ Track.ev('shop'); UI.shopTab = tab || 'offres'; }
     /* audit design du 11/11 : talents achetables et fusions possibles vus → plus de pastille jusqu'au prochain */
-    if (name === 'talents' && tab === 'tree') name = 'profil';   // Correctif PC (calepin de Tedy 1.5.8, point 1) : l'ancien « Talents › Arbre » est l'écran Profil
+    if (name === 'talents' && tab === 'tree'){ name = 'profil'; UI.pfTree = 1; }   /* 1.6.0 : droit sur « Arbre et voie » */   // Correctif PC (calepin de Tedy 1.5.8, point 1) : l'ancien « Talents › Arbre » est l'écran Profil
     if (name === 'talents') UI.talSeen = talentsBuyable();
-    if (name === 'profil'){ UI.voiePick = false; UI.voieArm = null; UI.avPick = false; }
+    if (name === 'profil'){ UI.voiePick = false; UI.voieArm = null; UI.avPick = false; UI.profView = UI.pfTree ? 'arbre' : ''; UI.pfTree = 0; UI.pfName = false; UI.pfFr = 0; }   // 1.6.0 : on revient sur la fiche (sauf « Talents › Arbre »)
     if (name === 'skins') UI.mergeSeen = gearMerges();
     if (name === 'carnet'){ UI.loreFresh = loreNew(); if (UI.loreFresh){ S.loreSeen = loreMask(); persist(); } Track.ev('lore', { n:pupN(), p:loreMask() }); }   // Correctif PC (1.5.8 histoire) : pages lues
     if (name === 'guild'){ UI.g.info = null; UI.g.err = false; UI.g.confirm = null; UI.g.look = null; if (!Board.on && !S.guild) UI.g.tab = 'create'; }
-    UI.sheet = name; $('#sheet-wrap').classList.remove('hidden');
+    UI.sheet = name; $('#sheet-wrap').classList.remove('hidden'); $('#sheet-wrap').classList.toggle('pf-on', name === 'profil');   // 1.6.0 : fiche profil sans bandeau pièces / gemmes (maquette)
     UI.renderSheet(); $('#sheet-body').scrollTop = 0;
     if (name === 'event'){ UI.loadBoard(); if (UI.lbTab && UI.lbTab !== 'ev') UI.loadLb(UI.lbTab); }
     if (name === 'guild'){ UI.g.lbAll = false; UI.loadGuild(); UI.loadFriends(); if (UI.g.view === 'chat') UI.chatStart(); }
@@ -12398,7 +12632,7 @@ const UI = {
     // Correctif PC (1.5.5 audit 2) : texte, focus et curseur gardés (sinon un classement qui arrive vide le champ et ferme le clavier)
     const body = $('#sheet-body'), top = body.scrollTop, ae = document.activeElement, fid = ae && body.contains(ae) && ae.id,
       sel = fid && ae.selectionStart != null ? [ae.selectionStart, ae.selectionEnd] : null,
-      keep = ['chat-in', 'fr-in', 'ev-name-in', 'gate-in'].map(id => { const e = $('#' + id); return e && (e.value || id === fid) ? [id, e.value] : null; }).filter(Boolean);
+      keep = ['chat-in', 'fr-in', 'ev-name-in', 'gate-in', 'pf-name-in'].map(id => { const e = $('#' + id); return e && (e.value || id === fid) ? [id, e.value] : null; }).filter(Boolean);
     body.innerHTML = UI['r_' + n]();
     keep.forEach(([id, v]) => { const e = $('#' + id); if (e) e.value = v; });
     if (fid){ const e = $('#' + fid); if (e && e.focus){ e.focus({ preventScroll:true }); if (sel && e.setSelectionRange) try { e.setSelectionRange(sel[0], sel[1]); } catch(_){} } }
@@ -12867,7 +13101,7 @@ const UI = {
   },
   // Correctif PC (calepin de Tedy 1.5.8, point 1) : écran Profil (bouton du portrait en haut à gauche, case de « Plus ») = niveau de compte,
   // avatar, voie et pouvoir, arbre de passifs. Les cartes sont celles de l'ancien onglet « Talents › Arbre », dans le même ordre.
-  r_profil(){ return accCard() + treeHtml(); },
+  r_profil(){ return UI.profView === 'arbre' ? `<button class="btn btn-ghost sm pf-back" data-act="pf-fiche">Retour</button>` + accCard() + treeHtml() : profHtml(); },   // 1.6.0 : fiche profil, puis « Arbre et voie »
   r_chest(){
     const ready = nowMs() >= S.chestNext;
     return ckHtml() + `<div class="card chest-card">${chestSvg('#C77A3A')}<div><h3>Coffre du nid</h3><p>Des pièces, parfois des gemmes. Gratuit toutes les ${CONFIG.freeChestHours} h.</p>
@@ -13077,7 +13311,7 @@ const UI = {
           await Ref.load(); UI.renderSheet(); UI.menu();
         } catch(e){ toast('Connexion impossible'); b.disabled = false; }
         break; }
-      case 'ttab': case 'tree': case 'tree-reset': case 'voie': case 'voie-x': case 'wk': case 'wk-bonus': case 'gl': accAct(act, b); break;   // 1.5.8 : arbre, semaine, objectifs à vie
+      case 'ttab': case 'tree': case 'tree-reset': case 'voie': case 'voie-x': case 'pf-tree': case 'pf-fiche': case 'pf-go': case 'pf-name': case 'pf-name-ok': case 'wk': case 'wk-bonus': case 'gl': accAct(act, b); break;   // 1.5.8 : arbre, semaine, objectifs à vie
       case 'mis': {
         const i = +b.dataset.i, m = S.mis.list[i], [k, v] = MISSION_REWARDS[i];
         if (!m || m.c || m.p < m.n) return;
@@ -13116,7 +13350,7 @@ const UI = {
         UI.renderSheet(); UI.menu(); break; }
       case 'try': {
         if (S.tryDay === dayKey() || S.skins.includes(id)) return;
-        S.tryDay = dayKey(); persist(true); UI.trySkin = id; UI.close();
+        S.tryDay = dayKey(); persist(true); UI.trySkin = id; UI.afterSheet = null; UI.close();   /* audit 1.6.0 : une partie démarre, pas de retour à la fiche */
         toast(`Essai : ${SKINS[id].name} pour une partie !`); Sfx.play('roar');
         setTimeout(() => startRun(), 250); break; }
       case 'ev-mile': {
@@ -13188,7 +13422,7 @@ const UI = {
         else if (!r.ok){ const why = { min:'Ta part est trop petite pour ces gemmes', young:'Les comptes de moins de 24 h ne reçoivent pas encore de gemmes' }[r.reason]; if (why) toast(why);   // Correctif PC (1.5.8, ensemble minimum) : le serveur refuse → on dit pourquoi
           if (Ens.d && r.reason) Ens.d.rewards = (Ens.d.rewards || []).filter(x => x.k + ':' + x.wk !== id); }   // et le bouton disparaît
         UI.renderSheet(); break; }   // 1.5.8 : boss de guilde, objectif mondial
-      case 'fd-play': { const f = (Ens.fd || []).find(x => String(x.id) === String(id) && x.in && x.open); if (!f) break; Sfx.play('click'); UI.close(); UI.fdNext = f; UI.endlessSel = false; startRun(); break; }   // 1.5.8 : relever le défi d'un ami
+      case 'fd-play': { const f = (Ens.fd || []).find(x => String(x.id) === String(id) && x.in && x.open); if (!f) break; Sfx.play('click'); UI.afterSheet = null; UI.close(); UI.fdNext = f; UI.endlessSel = false; startRun(); break; }   // 1.5.8 : relever le défi d'un ami
       case 'cq-claim': {
         b.disabled = true;
         const r = await UI.cqClaim(+id);
@@ -13279,6 +13513,8 @@ const UI = {
       case 'ev-name-ok': {
         const v = cleanName($('#ev-name-in').value);
         if (v.length < 2){ toast('Choisis un pseudo de 2 à 16 caractères'); return; }
+        if (v !== S.online.name && !nameOk()){ toast('Un seul changement de pseudo par jour.'); return; }   // audit 1.6.0 : comme le serveur
+        if (v !== S.online.name && Board.on && S.online.id) S.nameAt = nowMs();
         S.online.name = v; persist(true); UI.evEditing = false; Sfx.play('click');
         await Board.rename(); if (Board.on) UI.loadBoard(); UI.renderSheet(); break; }
       case 'colclaim': { const i = +id, m = COL_MILES[i]; if (!m || colGot().includes(i) || colScore() < m.pts) break;
@@ -13323,8 +13559,8 @@ const UI = {
       case 'w-plot': { if (S.plots >= 5) break; const c = plotCost(); if (!Eco.pay('gems', c)){ toast('Pas assez de gemmes'); break; }
         S.plots++; S.garden.push(null); Sfx.play('coin'); persist(true); UI.wallet(); UI.renderSheet(); break; }
       case 'w-cos': { const c = COS[id]; if (!c) break; S.cos[c.slot] = S.cos[c.slot] === id ? '' : id; Sfx.play('click'); persist(); UI.renderSheet(); break; }
-      case 'defi': Sfx.play('click'); UI.close(); UI.defiNext = true; startRun(); break;
-      case 'aube': if (!aubeOk()) break; Sfx.play('click'); UI.close(); UI.aubeNext = true; startRun(); break;   // 1.5.8 : duel « L'aube »
+      case 'defi': Sfx.play('click'); UI.afterSheet = null; UI.close(); UI.defiNext = true; startRun(); break;
+      case 'aube': if (!aubeOk()) break; Sfx.play('click'); UI.afterSheet = null; UI.close(); UI.aubeNext = true; startRun(); break;   // 1.5.8 : duel « L'aube »
       case 'bud': { const i = +b.dataset.id; if (!(i >= 0 && i < pupN())) break; S.bud = budId() === i ? -1 : i; Sfx.play('click'); persist(); UI.renderSheet(); break; }   // 1.5.8 : dragonneau compagnon
       case 'w-troph': { const s = +b.dataset.id; UI.trophSel = UI.trophSel === s ? -1 : s; Sfx.play('click'); break; }   // 1.5.8 : trophées du nid
       case 'w-tset': trophSet(b.dataset.id || ''); Sfx.play('click'); break;
@@ -13547,27 +13783,27 @@ const UI = {
     let name, desc, icon, lv = '', cls = '';
     if (o.kind === 'evo'){ const ev = EVOS[o.id]; name = ev.name; icon = WEAPONS[o.id].icon; desc = ev.desc; cls = 'evo'; }
     else if (o.kind === 'w'){ const w = WEAPONS[o.id]; name = w.name; icon = w.icon; desc = w.desc[o.lvl - 1] + (o.lvl === MAXLV ? ` Évolue ensuite avec ${PASSIVES[EVOS[o.id].pair].name}.` : ''); }
-    else if (o.kind === 'p'){ const p = PASSIVES[o.id]; name = p.name; icon = p.icon; desc = `${p.desc} Fait évoluer ${WEAPONS[p.evo].the} au niveau 5.`; }
+    else if (o.kind === 'p'){ const p = PASSIVES[o.id]; name = p.name; icon = p.icon; desc = G.first ? p.desc : `${p.desc} Fait évoluer ${WEAPONS[p.evo].the} au niveau 5.`; }   // 1.6.0 : 1re partie, une phrase
     else if (o.kind === 'gear'){ name = GEAR[o.it.b].name; icon = gearIco(o.it.b, o.it.r); desc = 'Nouvel équipement pour ton dragon.'; lv = `<span class="lv gq q${o.it.r}">${RARITY[o.it.r]}</span>`; }
     else if (o.kind === 'heal'){ name = 'Petite sieste'; icon = 'heart'; desc = 'Récupère 40 % de ta vie.'; }
     else { name = 'Sac de pièces'; icon = 'coin'; desc = `+${Math.round((o.big ? 60 : 25)*chLoot(G.ch))} pièces pour cette partie.`; }
-    if (o.lvl) lv = o.lvl === 1 ? '<span class="lv new">Nouveau</span>' : `<span class="lv">Nv ${o.lvl}</span>`;
+    if (o.lvl) lv = o.lvl === 1 ? (G.first ? '' : '<span class="lv new">Nouveau</span>') : `<span class="lv">Nv ${o.lvl}</span>`;   // 1.6.0 : 1re partie, sans « Nouveau » (tout est nouveau)
     if (cls) lv = '<span class="lv evo">Évolution</span>';
-    if (rec){ cls += ' rec'; lv += '<span class="lv rec">Conseillé</span>'; }   // Correctif PC (1.5.5 build) : la carte que ton build prendrait
+    if (rec){ cls += ' rec'; if (!G.first) lv += '<span class="lv rec">Conseillé</span>'; }   // 1.6.0 : 1re partie, la lueur dorée suffit   // Correctif PC (1.5.5 build) : la carte que ton build prendrait
     return `<button class="choice ${cls}" data-i="${i}"><span class="badge">${ico(icon)}</span><span><b>${name}${lv}</b><span class="d">${desc}</span></span></button>`;
   },
   renderChoices(){ const r = Build.best(UI.luChoices); $('#lu-choices').innerHTML = UI.luChoices.map((o, i) => UI.cardHtml(o, i, i === r)).join('');
-    $('#lu-leg').classList.toggle('hidden', r < 0 || S.runs >= 3); },   // Correctif PC (1.5.7 : explication du build) : légende de « Conseillé » pendant les 3 premières parties
+    $('#lu-leg').classList.toggle('hidden', r < 0 || S.runs >= 3 || G.first); },   // 1.6.0 : pas d'explication du build en 1re partie   // Correctif PC (1.5.7 : explication du build) : légende de « Conseillé » pendant les 3 premières parties
   renderReroll(){
     let h = '';
     if (G.freeRerolls > 0) h = `<button class="btn btn-ghost sm" data-rr="free">Relancer (gratuit)</button>`;
     else {
-      if (G.adRerolls > 0 && adLeft('reroll') > 0) h += `<button class="btn btn-ad sm" data-rr="ad">${ico('ad')}Relancer</button>`;
+      if (G.adRerolls > 0 && adLeft('reroll') > 0 && S.age) h += `<button class="btn btn-ad sm" data-rr="ad">${ico('ad')}Relancer</button>`;
       else if (G.adRerolls > 0) h += UI.adTomorrow('Relancer', 'sm');   // Correctif PC (audit design 1.5.8, lot A) : limite du jour = bouton grisé « Demain », jamais caché
     }
     // Correctif PC (1.5.5 build) : bouton « Build » (doré quand « Auto » est actif) qui ouvre le choix de la page de build
     const l = Build.list();
-    h += `<button class="btn ${S.build.on ? 'btn-coin' : 'btn-ghost'} sm bld-b" data-rr="bld" aria-expanded="${!!UI.luBld}">${ico(l.length ? Build.icon(l[0]) : 'star')}<span>${S.build.on ? 'Auto' : 'Build'}</span></button>`;
+    if (!G.first) h += `<button class="btn ${S.build.on ? 'btn-coin' : 'btn-ghost'} sm bld-b" data-rr="bld" aria-expanded="${!!UI.luBld}">${ico(l.length ? Build.icon(l[0]) : 'star')}<span>${S.build.on ? 'Auto' : 'Build'}</span></button>`;
     $('#lu-reroll').innerHTML = h;
     const bp = $('#lu-bld'); bp.classList.toggle('hidden', !UI.luBld);
     if (UI.luBld) bp.innerHTML = Build.tabs().map(c => Build.tabHtml(c, 'data-bl')).join('')
@@ -13587,7 +13823,9 @@ const UI = {
   renderRevive(){
     const cost = CONFIG.reviveGemCost[G.reviveGems];
     let h = '';
-    if (!G.reviveAd && adLeft('revive') > 0) h += `<button class="btn btn-ad wide" data-rv="ad">${ico('ad')}Revivre gratuitement</button>`;
+    // 1.6.0 (entonnoir, oui de Tedy) : 1re mort de la 1re partie = une réanimation offerte, sans vidéo ni gemmes (texte déjà traduit)
+    if (G.first && !G.reviveFree) h += `<button class="btn btn-coin wide" data-rv="free">${ico('heart')}Revivre gratuitement</button>`;
+    else if (!G.reviveAd && adLeft('revive') > 0 && S.age) h +=   /* 1.6.0 (audit design) : pas de vidéo avant la réponse à l'âge (1re partie) */ `<button class="btn btn-ad wide" data-rv="ad">${ico('ad')}Revivre gratuitement</button>`;
     if (cost != null) h += `<button class="btn btn-gem wide" data-rv="gem">Revivre pour ${ico('gem')}${cost}</button>`;
     h += `<button class="btn btn-ghost wide" data-rv="quit">Abandonner</button>`;
     if (!G.reviveAd && adLeft('revive') <= 0) h += UI.adTomorrow('Revivre gratuitement', 'wide');   // Correctif PC (audit design 1.5.8, lot A) : grisé « Demain », après les deux autres pour ne pas gêner
@@ -13643,6 +13881,9 @@ const UI = {
     const items = [`<span class="loot-item">${ico('coin')}${cu('c', r.coins)}</span>`];
     // Correctif PC (audit design 1.5.8, lot A) : pièces, gemmes et objet gagné d'abord (gains rangés en 2 colonnes)
     if (r.gems) items.push(`<span class="loot-item">${ico('gem')}${cu('g', r.gems)}</span>`);
+    const fr1 = S.runs === 1 && !r.defi && !r.aube && !G.endless;   // 1.6.0 (entonnoir, oui de Tedy) : 1re partie finie = la récompense seule, en grand (le reste est crédité quand même)
+    $('#rs-loot').classList.toggle('fr1', fr1);
+    if (!fr1){
     if (r.gear) items.push(`<span class="loot-item gear-loot q${r.gear.r}">${gearHtml(r.gear.b, r.gear.r)}<span><b>${GEAR[r.gear.b].name}</b><small>${RARITY[r.gear.r]}</small></span></span>`);
     if (G.boosted) items.push(`<span class="loot-item boost-loot">${ico('coin')}<span>Pièces ×2</span></span>`);
     if (r.pacts) items.push(`<span class="loot-item boost-loot">${ico('pacte')}<span>Pactes</span> <span>+${Math.round(r.pacts*PACT_K*100)} %</span></span>`);   // 1.5.8 : pactes, crâne peint (Correctif PC 1.5.8, images Higgsfield)
@@ -13653,6 +13894,7 @@ const UI = {
     if (r.pup) items.push(`<span class="loot-item pup-loot"><canvas width="96" height="96" data-skin="${r.pup}" aria-hidden="true"></canvas><span><b>${SKINS[r.pup].name}</b><small>Un dragonneau t’a suivi jusqu’au nid !</small></span></span>`);   // 1.5.8 histoire
     if (r.ckey) items.push(`<span class="loot-item ev-loot">${ico('key')}<b>+1</b><small>clé de collection</small></span>`);   // 1.5.9
     if (r.pupMiss) items.push(`<span class="loot-item pup-miss"><span><small>Tiens ${Math.round(r.pupMiss/60)} min avant de sortir par un portail pour ramener le dragonneau suivant.</small></span></span>`);   // 1.5.9
+    }
     $('#rs-loot').innerHTML = items.map((h, i) => first ? h.replace('class="loot-item', `style="--d:${(.12 + i*.14).toFixed(2)}s" class="loot-item lin`) : h).join('');
     UI.lootWas = { c:r.coins, g:r.gems, y:G.runCandy, p:G.passPts, e:r.ev && r.ev.pts, a:r.accX };
     UI.countUp($('#rs-loot'), first ? 250 : 0);
@@ -13680,7 +13922,7 @@ const UI = {
   renderResultActions(){
     let h = '';
     if (!G.doubled && adLeft('double') <= 0 && (UI.result.coins > 0 || UI.result.ev)) h += UI.adTomorrow(UI.result.ev ? 'Doubler les gains' : 'Doubler les pièces', 'wide');   // Correctif PC (audit design 1.5.8, lot A) : grisé « Demain »
-    if (!G.doubled && adLeft('double') > 0 && (UI.result.coins > 0 || UI.result.ev)) h += `<button class="btn btn-ad wide" data-rs="x2">${ico('ad')}<span>${UI.result.ev ? 'Doubler les gains' : 'Doubler les pièces'}</span>${UI.result.coins > 0 ? `<small class="x2n">+${fmt(UI.result.coins)}</small>` : ''}</button>`;
+    if (!G.doubled && adLeft('double') > 0 && S.age && (UI.result.coins > 0 || UI.result.ev)) h += `<button class="btn btn-ad wide" data-rs="x2">${ico('ad')}<span>${UI.result.ev ? 'Doubler les gains' : 'Doubler les pièces'}</span>${UI.result.coins > 0 ? `<small class="x2n">+${fmt(UI.result.coins)}</small>` : ''}</button>`;
     if (UI.result.loreUp) h = `<button class="btn btn-ghost wide lore-up" data-rs="lore">${ico('book')}<span>Nouvelle page dans le carnet !</span></button>` + h;   // 1.5.8 histoire
     const ts = UI.trySkin;
     if (ts && !S.skins.includes(ts)){ const sk = SKINS[ts];
@@ -13814,12 +14056,12 @@ const Tour = {
 // La visite complète (HUD_STEPS) reste dans Pause › « Tuto de l’écran de jeu ».
 const Tips = {
   step:0, t:0,
-  start(){ Tips.end(); Tips.step = 1; G.hold = true; G.holdD = 0; S.tourHud = true; persist(); Track.ev('tuto_1', { n:3, r:S.runs }); },
-  moved(){ G.hold = false; if (Tips.step !== 1) return; Tips.step = 2; S.tutoDone = true; persist(); UI.hint(false); },
+  start(){ Tips.end(); Tips.step = 1; G.hold = true; G.holdD = 0; $('#hint').classList.add('wait');   /* 1.6.0 (audit design) : le jeu attend, ça se voit */ S.tourHud = true; persist(); Track.ev('tuto_1', { n:3, r:S.runs }); },
+  moved(){ G.hold = false; $('#hint').classList.remove('wait'); if (Tips.step !== 1) return; Fu.ev('move'); Tips.step = 2; S.tutoDone = true; persist(); UI.hint(false); },
   tick(){   // UI.hud, toutes les 0,1 s
     const h = $('#hint');
     if (Tips.step === 2 && pickups.some(p => p.type === 'xp' && Math.hypot(p.x - P.x, p.y - P.y) < 200)){
-      Tips.step = 3; Tips.t = 4; h.textContent = 'Ramasse l’expérience pour monter de niveau'; UI.hint(true); Track.ev('tuto_2', { n:3, r:S.runs }); }
+      Tips.step = 3; Tips.t = 4; h.textContent = 'Ramasse l’expérience pour monter de niveau'; h.classList.add('top'); UI.hint(true); Track.ev('tuto_2', { n:3, r:S.runs }); }
     else if (Tips.step === 3 && ((Tips.t -= .1) <= 0 || P.lvl > 1 || P.xp > 0)){ Tips.step = 4; UI.hint(false); }
     const a = $('#ult-tip'); if (a && (Tips.step !== 5 || G.ult || G.pwA || (Tips.t -= .1) <= 0 || (G.rage || 0) < 1)){ a.remove(); if (Tips.step === 5) Tips.end(1); }
   },
@@ -13831,7 +14073,7 @@ const Tips = {
     const a = document.createElement('i'); a.id = 'ult-tip'; a.className = 'tour-arrow down'; a.setAttribute('aria-hidden', 'true');
     a.style.left = (r.left + r.width/2) + 'px'; a.style.top = (r.top - 26) + 'px'; document.body.appendChild(a);
   },
-  end(ok){ const a = $('#ult-tip'); if (a) a.remove(); if (!Tips.step) return;
+  end(ok){ const a = $('#ult-tip'); if (a) a.remove(); $('#hint').classList.remove('wait', 'top'); if (!Tips.step) return;
     Track.ev('tuto_done', { ok:ok ? 1 : 0, i:Math.min(3, Tips.step > 4 ? 3 : Tips.step > 2 ? 2 : 1), n:3, r:S.runs }); Tips.step = 0; G.hold = false; },
 };
 // « Jouer » sur l'image-titre au tout premier lancement (texte déjà traduit) : toucher l'écran ou le bouton lance le chapitre 1
@@ -13839,7 +14081,7 @@ function splashPlay(s, go){
   const bar = s.querySelector('.sp-bar'); if (bar) bar.remove();
   const b = document.createElement('button'); b.className = 'btn btn-play sp-play'; b.id = 'sp-play'; b.textContent = 'Jouer';
   (s.querySelector('.sp-in') || s).appendChild(b);
-  let done = false; s.addEventListener('click', () => { if (done) return; done = true; go(); });
+  let done = false; s.addEventListener('click', () => { if (done) return; done = true; Fu.ev('play'); go(); });
 }
 const LU_SLOW = .3;   // vitesse du jeu pendant le choix d'une amélioration (audit design 1.5.8, lot A : vraie pause pendant les 3 premières parties, G.easy)
 function frame(now){
@@ -13862,16 +14104,20 @@ function splashOut(){
   let gone = false, t0 = 0, ld = false;
   // Correctif PC (audit design 1.5.8, lot B) : première minute (maquette 08). La question d'âge se pose SUR l'image-titre, avant le menu
   // (avant : 2 s après le menu, par-dessus) ; au tout premier lancement, l'image-titre propose ensuite « Jouer » et la partie part
-  // directement (le menu vient après la 1re partie). Un joueur qui ferme pendant sa 1re partie retombe sur le menu (S.fastStart).
+  // directement (le menu vient après la 1re partie).
+  // 1.6.0 (entonnoir) : « Jouer » revient aussi aux 2e et 3e lancements tant qu'aucune partie n'est finie (avant : un joueur qui fermait pendant
+  // sa 1re partie retombait sur le menu complet, S.fastStart).
   // « loaded » reste mesuré quand l'image-titre aurait disparu, sans le temps passé à répondre.
-  const loaded = () => { if (ld) return; ld = true;
+  const loaded = () => { if (ld) return; ld = true; Fu.title();   // 1.6.0 : image-titre prête (entonnoir)
     Track.ev('loaded', { ms:Math.round(performance.now()), boot:Track.bootMs || 0, app:isApp() ? 1 : 0, intro:window.__introStudio ? 1 : 0, f:S.runs ? 0 : 1, q:qLvl });   // Correctif PC (1.5.6 stats) : temps de chargement (ms depuis l'ouverture)
     eAnimLoad.ok = 1; setTimeout(eAnimLoad, 300);   // Correctif PC (1.5.8) : planches des ennemis animés, chargées une fois le menu affiché
     setTimeout(eSpritesIdle, 1200); };   // Correctif PC (1.5.6 chargement) : ennemis préparés au calme
   const gate = () => {   // true : l'image-titre reste (question d'âge, puis « Jouer » au 1er lancement)
     if (s._gate) return true;
-    if (!S.age){ s._gate = 1; loaded(); Age.ask(); Age.ready().then(() => { s._gate = 0; bye(); }); return true; }
-    if (!S.runs && !S.tutoDone && !S.fastStart){ s._gate = 1; loaded(); splashPlay(s, () => { s._gate = 0; S.fastStart = true; persist(); bye(); $('#btn-play').click(); }); return true; }
+    // 1.6.0 (entonnoir, choix de Tedy du 12/11) : au 1er lancement, « Jouer » d'abord ; l'âge est demandé au 1er retour au menu (UI.toMenu).
+    // Rien ne le demande avant : AdMob attend l'âge (Mon.initAds), une vidéo choisie pendant la 1re partie le demande d'abord (Mon.rewarded).
+    if (!S.runs && (S.boots | 0) <= 3 && !s._played){ s._gate = 1; loaded(); splashPlay(s, () => { s._gate = 0; s._played = 1; S.fastStart = true; persist(); bye(); $('#btn-play').click(); }); return true; }   // _played : une fois par lancement
+    if (!S.age && !s._played){ s._gate = 1; loaded(); Age.ask(); Age.ready().then(() => { s._gate = 0; bye(); }); return true; }
     return false;
   };
   const bye = () => { if (gone || gate()) return; gone = true; loaded();
@@ -13901,9 +14147,11 @@ function boot(){
   if (!S.online.name){ S.online.name = 'Dragon' + (1000 + randi(9000)); persist(); }
   Ev.sync();
   if (!S.hoard.t){ S.hoard.t = nowMs(); persist(); }
-  if (!S.age) afterSplash.push(() => Age.ask());   // Correctif PC (PEGI 3)
+  if (!S.age) afterSplash.push(() => { if (G.state === 'menu') Age.ask(); });   // Correctif PC (PEGI 3) ; 1.6.0 : jamais pendant la 1re partie lancée depuis l'image-titre
   // Rétention (1.5.8) : nombre de lancements ; dès le 2e, le rappel est proposé même à qui a fermé l'appli en pleine partie
   S.boots = (S.boots || 0) + 1; persist();
+  // 1.6.0 (entonnoir) : pas d'intro BY LUX au lancement suivant tant que la 1re partie n'est pas finie (intro-studio.js), retiré au 1er retour au menu (UI.toMenu)
+  try { if (!S.runs) localStorage.setItem('bylux.intro.attendre', '1'); else localStorage.removeItem('bylux.intro.attendre'); } catch(e){}
   nvBoot(); setInterval(nvTick, 1000);   // Correctif PC (1.5.8, nouveautés) : nouveau joueur = rien à montrer (avant que S.born soit posé) ; sinon pop-up au premier moment calme du menu
   if (S.age && S.boots >= 2) afterSplash.push(() => { if (Mon.native && S.notif == null && !document.querySelector('.modal:not(.hidden)')) Notif.offer(); });
   if (!S.gearGift){ S.gearGift = true; addGear('griffes_roi', 0); if (!S.runs) S.gearTip = 1; persist(); if (S.runs) afterSplash.push(() => Age.ready().then(() => toast('Nouveau : l’équipement ! Des griffes t’attendent dans l’onglet Dragons.'))); }   // Correctif PC (audit design 1.5.8, lot B) : nouveau joueur = bulle sur l'onglet Dragons au 1er retour au menu (UI.gearTip), plus de toast pendant la 1re minute   // Correctif PC (1.5.3 audit) : après l'image-titre, pas sous l'intro ; (passe design 1.5.8) et après la question d'âge du 1er lancement, qu'il recouvrait
@@ -13917,7 +14165,7 @@ function boot(){
   // Correctif PC (1.5.6 stats) : boot = chaque lancement (langue du téléphone, appli Play ou site, écran, mémoire, cœurs, qualité)
   Track.ev('boot', { v:VERSION, app:isApp() ? 1 : 0, n:S.born ? 0 : 1, dl:String(navigator.language || '').slice(0, 12), l:LANG.cur,
     w:innerWidth, h:innerHeight, r:Math.round((devicePixelRatio || 1)*100)/100, mem:navigator.deviceMemory || 0, cpu:navigator.hardwareConcurrency || 0, q:qLvl, gfx:S.gfx });
-  FirstRun.boot(); setInterval(() => { if (G.first && G.state !== 'end' && G.state !== 'menu') FirstRun.mark(); }, 3000);
+  FirstRun.boot(); Fu.boot(); if (S.runs === 1) Fu.ev('menu1', { r:2 });   /* 1.6.0 (audit) : r:2 = appli fermée sur l'écran de fin, menu vu à ce lancement */ setInterval(() => { if (G.first && G.state !== 'end' && G.state !== 'menu') FirstRun.mark(); }, 3000);
   if (!S.born){ S.born = nowMs(); persist(); }
   Track.ev('session', { v:VERSION, app:isApp() ? 1 : 0, runs:S.runs, ch:S.unlocked });
   // Session Home (11/11, choix A de Tedy) : boot et session partent TOUT DE SUITE (inscription puis envoi), sans attendre les 15 s :

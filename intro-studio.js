@@ -12,6 +12,9 @@
   if (window.__introStudio) return;
   // 9/11 (rétention, QCM de Tedy) : pas d'intro au TOUT PREMIER lancement (ni intro déjà vue, ni partie sauvegardée) : le joueur arrive plus vite au jeu.
   try { var vu = localStorage.getItem('bylux.intro.vu'); localStorage.setItem('bylux.intro.vu', '1'); if (!vu && !localStorage.getItem('dragonnet.save.v1')) return; } catch (e) {}
+  // 12/11 (entonnoir des 2 premières minutes, Dragonnet 1.6.0) : le jeu peut demander d'attendre (« bylux.intro.attendre ») tant que le
+  // joueur n'a pas fini sa 1re partie : celui qui revient sans l'avoir finie retourne au jeu tout de suite. Un jeu qui ne le pose pas ne change pas.
+  try { if (localStorage.getItem('bylux.intro.attendre')) return; } catch (e) {}
   window.__introStudio = true;
   var d = document, fini = false, t0 = Date.now(), ctx = null, src = null, DUREE = 5000;
 
