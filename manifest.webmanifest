@@ -1,8 +1,8 @@
 {
  "name": "Dragonnet",
  "short_name": "Dragonnet",
- "start_url": "./",
- "scope": "./",
+ "start_url": "/jouer/",
+ "scope": "/",
  "display": "fullscreen",
  "orientation": "portrait",
  "background_color": "#1A0E24",
