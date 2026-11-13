@@ -109,3 +109,6 @@ tr:last-child td{border-bottom:0}
 .fi-meta{color:var(--moon-soft)}
 .ev-img{float:left;width:56px;height:56px;margin:0 10px 4px 0;border-radius:12px}
 @media (max-width:420px){.fiche img{width:72px;height:72px}}
+
+/* Menu à huit entrées : plus compact sur téléphone */
+@media (max-width:639px){.nav a{padding:6px 9px;min-height:36px;font-size:.95rem}}
