@@ -1,5 +1,5 @@
-// Dragonnet 1.8.2 : service worker du site (écrit par scripts/build-site.mjs, ne pas modifier à la main)
-const V = "dragonnet-1.8.2";
+// Dragonnet 1.8.3 : service worker du site (écrit par scripts/build-site.mjs, ne pas modifier à la main)
+const V = "dragonnet-1.8.3";
 const PRE = ['/jouer/', '/manifest.webmanifest', '/icone-192.png', '/icone-512.png', '/icone-180.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => c.addAll(PRE)).catch(() => {})); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('dragonnet-') && k !== V).map(k => caches.delete(k))))
